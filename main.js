@@ -131,9 +131,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        play() {
+        async play() {
             if (this.isPlaying || this.tracks.length === 0) return;
-            this.audioContext.resume();
+
+            // Tenta retomar o AudioContext se estiver suspenso (necessário para mobile)
+            if (this.audioContext.state === 'suspended') {
+                try {
+                    await this.audioContext.resume();
+                } catch (e) {
+                    console.error("Falha ao retomar AudioContext:", e);
+                    // Opcional: exibir uma mensagem ao usuário que o áudio não pôde iniciar
+                    return; // Impede a reprodução se o contexto não puder ser retomado
+                }
+            }
+
             this.isPlaying = true;
             this.startTime = this.audioContext.currentTime - this.pauseTime;
 
@@ -570,6 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ui.loadingStatus.style.color = 'red';
             ui.retryBtn.style.display = 'block'; // Mostra o botão de tentar novamente
             updateButtons(false, false, true); // Desabilita botões de play/pause/stop
+            alert(`Ocorreu um erro: ${state.error}`); // Adiciona o alert aqui
         }
     };
 
