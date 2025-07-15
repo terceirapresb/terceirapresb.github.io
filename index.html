@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Multitrack com Web Audio API</title>
+    <title>Player Multitrack</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="player-container">
-        <h1>Player Multitrack</h1>
-        <p>Sincronização de precisão com Web Audio API</p>
+    <div class="player-container" id="player-container">
+        <h1 id="player-title">Player Multitrack</h1>
 
         <div class="controls-main">
-            <div class="song-selector">
+            <div class="song-selector" id="song-selector-container">
                 <label for="song-select">Escolha a Música:</label>
                 <select id="song-select"></select>
             </div>
@@ -37,6 +36,11 @@
         </div>
     </div>
 
-    <script src="main.js"></script>
+    <script src="main.js" 
+            id="multitrack-player-script" 
+            data-musica=""
+            data-width=""
+            data-height="">
+    </script>
 </body>
 </html>
