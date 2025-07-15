@@ -46,6 +46,24 @@ document.addEventListener('DOMContentLoaded', () => {
             this.onProgressUpdate = () => {};
             this.onStateChange = () => {};
             this.onLoadProgress = () => {};
+
+            // Tenta retomar o AudioContext no primeiro toque/clique
+            const resumeContext = () => {
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume().then(() => {
+                        console.log('AudioContext resumed successfully.');
+                    }).catch(e => {
+                        console.error('Error resuming AudioContext:', e);
+                    });
+                }
+                // Remove os listeners após a primeira tentativa bem-sucedida ou falha
+                document.removeEventListener('touchstart', resumeContext);
+                document.removeEventListener('click', resumeContext);
+            };
+            document.addEventListener('touchstart', resumeContext, { once: true });
+            document.addEventListener('click', resumeContext, { once: true });
+
+            console.log('AudioContext initial state:', this.audioContext.state);
         }
 
         async load(trackList) {
