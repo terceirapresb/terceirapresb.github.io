@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player de Áudio Multifaixa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            margin: 0;
+        }
+
+        .player-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 100%;
+            max-height: 100vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            font-weight: 300;
+        }
+
+        .main-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tracks-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .track {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .track-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .track-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .track-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .track-btn {
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .track-btn:hover {
+            background: #cbd5e0;
+            transform: translateY(-1px);
+        }
+
+        .track-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .track-btn.solo {
+            background: #f56565;
+            color: white;
+        }
+
+        .track-btn.solo:hover {
+            background: #e53e3e;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .volume-label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            min-width: 60px;
+        }
+
+        .volume-slider {
+            flex: 1;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            background: #5a67d8;
+            transform: scale(1.1);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .volume-value {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            min-width: 30px;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .player-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .main-controls {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .control-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .track-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .track-buttons {
+                align-self: stretch;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="player-container">
+        <h1>Player Multifaixa</h1>
+        
+        <div class="main-controls">
+            <button class="control-btn" id="playBtn">▶ Play</button>
+            <button class="control-btn" id="pauseBtn">⏸ Pause</button>
+            <button class="control-btn" id="stopBtn">⏹ Stop</button>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="time-display">
+                <span id="currentTime">00:00</span>
+                <span id="totalTime">00:00</span>
+            </div>
+        </div>
+        
+        <div class="tracks-container" id="tracksContainer">
+            <div class="loading">Carregando faixas de áudio...</div>
+        </div>
+    </div>
+
+    <script>
+        class MultiTrackPlayer {
+            constructor() {
+                this.tracks = [];
+                this.trackData = [];
+                this.isPlaying = false;
+                this.currentTime = 0;
+                this.duration = 0;
+                this.soloTrack = null;
+                this.musicFolder = '';
+                
+                this.initializeElements();
+                this.getConfigFromParent();
+                this.discoverTracks();
+                this.setupEventListeners();
+            }
+
+            getConfigFromParent() {
+                // Tenta pegar configuração do iframe pai
+                try {
+                    const iframe = window.parent.document.querySelector('iframe[data-musica]');
+                    if (iframe) {
+                        this.musicFolder = iframe.getAttribute('data-musica') || 'Clamo Jesus';
+                        const width = iframe.getAttribute('data-width');
+                        const height = iframe.getAttribute('data-height');
+                        
+                        if (width && height) {
+                            this.adjustPlayerSize(width, height);
+                        }
+                    } else {
+                        // Fallback para parâmetros URL
+                        const urlParams = new URLSearchParams(window.location.search);
+                        this.musicFolder = urlParams.get('musica') || 'Clamo Jesus';
+                    }
+                } catch (e) {
+                    // Se não conseguir acessar o parent, usa parâmetros URL ou padrão
+                    const urlParams = new URLSearchParams(window.location.search);
+                    this.musicFolder = urlParams.get('musica') || 'Clamo Jesus';
+                }
+            }
+
+            adjustPlayerSize(width, height) {
+                document.body.style.width = width + 'px';
+                document.body.style.height = height + 'px';
+                document.body.style.maxWidth = width + 'px';
+                document.body.style.maxHeight = height + 'px';
+            }
+
+            async discoverTracks() {
+                const foundTracks = [];
+                
+                try {
+                    // Primeira tentativa: listagem de diretório
+                    const audioFiles = await this.bruteForceDiscoverFiles();
+                    
+                    for (const fileName of audioFiles) {
+                        const filePath = `audio/${this.musicFolder}/${fileName}`;
+                        const trackName = this.extractTrackName(fileName);
+                        foundTracks.push({ name: trackName, file: filePath });
+                    }
+                    
+                } catch (error) {
+                    console.error('Erro ao escanear pasta:', error);
+                }
+                
+                this.trackData = foundTracks;
+                
+                if (this.trackData.length > 0) {
+                    this.loadTracks();
+                } else {
+                    this.showNoTracksMessage();
+                }
+            }
+
+            async bruteForceDiscoverFiles() {
+                const foundFiles = [];
+                
+                // Primeira tentativa: listagem de diretório via HTTP
+                try {
+                    const response = await fetch(`audio/${this.musicFolder}/`);
+                    const text = await response.text();
+                    
+                    // Extrai links de arquivos de áudio do HTML retornado
+                    const audioExtensions = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac'];
+                    const linkRegex = /<a[^>]+href=["']([^"']+)["'][^>]*>/gi;
+                    let match;
+                    
+                    while ((match = linkRegex.exec(text)) !== null) {
+                        const fileName = decodeURIComponent(match[1]);
+                        const extension = fileName.split('.').pop()?.toLowerCase();
+                        
+                        if (extension && audioExtensions.includes(extension)) {
+                            foundFiles.push(fileName);
+                        }
+                    }
+                    
+                    if (foundFiles.length > 0) {
+                        return foundFiles;
+                    }
+                } catch (error) {
+                    console.log('Listagem de diretório não disponível');
+                }
+                
+                // Se não conseguiu listar, usa busca por instrumentos
+                return await this.searchInstrumentVariations();
+            }
+            
+            async searchInstrumentVariations() {
+                const audioExtensions = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac'];
+                const foundFiles = [];
+                
+                // Mapeamento de instrumentos com todas as variações possíveis
+                const instrumentVariations = {
+                    'Bass': [
+                        'Bass', 'bass', 'BASS',
+                        'Contrabaixo', 'contrabaixo', 'CONTRABAIXO',
+                        'Contra-baixo', 'contra-baixo', 'CONTRA-BAIXO',
+                        'Baixo', 'baixo', 'BAIXO'
+                    ],
+                    'Drums': [
+                        'Drums', 'drums', 'DRUMS',
+                        'Bateria', 'bateria', 'BATERIA',
+                        'Percussao', 'percussao', 'PERCUSSAO',
+                        'Percussão', 'percussão', 'PERCUSSÃO'
+                    ],
+                    'Guitar': [
+                        'Guitar', 'guitar', 'GUITAR',
+                        'Guitarra', 'guitarra', 'GUITARRA',
+                        'Violao', 'violao', 'VIOLAO',
+                        'Violão', 'violão', 'VIOLÃO'
+                    ],
+                    'Piano': [
+                        'Piano', 'piano', 'PIANO',
+                        'Teclado', 'teclado', 'TECLADO',
+                        'Keyboard', 'keyboard', 'KEYBOARD',
+                        'Keys', 'keys', 'KEYS'
+                    ],
+                    'Vocals': [
+                        'Vocals', 'vocals', 'VOCALS',
+                        'Vocal', 'vocal', 'VOCAL',
+                        'Voz', 'voz', 'VOZ',
+                        'Voice', 'voice', 'VOICE'
+                    ],
+                    'Other': [
+                        'Other', 'other', 'OTHER',
+                        'Outros', 'outros', 'OUTROS',
+                        'Outro', 'outro', 'OUTRO',
+                        'Misc', 'misc', 'MISC',
+                        'Effects', 'effects', 'EFFECTS',
+                        'Efeitos', 'efeitos', 'EFEITOS',
+                        'FX', 'fx', 'Fx'
+                    ]
+                };
+                
+                // Busca por cada instrumento e suas variações
+                for (const [instrumentName, variations] of Object.entries(instrumentVariations)) {
+                    let foundForInstrument = false;
+                    
+                    for (const variation of variations) {
+                        if (foundForInstrument) break;
+                        
+                        for (const ext of audioExtensions) {
+                            const fileName = `${variation}.${ext}`;
+                            const filePath = `audio/${this.musicFolder}/${fileName}`;
+                            
+                            if (await this.fileExists(filePath)) {
+                                foundFiles.push(fileName);
+                                foundForInstrument = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                return foundFiles;
+            }
+
+
+            extractTrackName(fileName) {
+                // Remove extensão
+                let name = fileName.replace(/\.[^/.]+$/, '');
+                
+                // Se contém parênteses, pega o que está dentro
+                const match = name.match(/\(([^)]+)\)/);
+                if (match) {
+                    name = match[1];
+                }
+                
+                // Remove prefixos numéricos e underscores
+                name = name.replace(/^\d+_/, '').replace(/^_+/, '');
+                
+                // Remove títulos longos e mantém só a parte relevante
+                if (name.includes(' - ')) {
+                    const parts = name.split(' - ');
+                    if (parts.length > 1) {
+                        name = parts[parts.length - 1]; // Pega a última parte
+                    }
+                }
+                
+                // Normaliza nomes para exibição
+                const nameNormalization = {
+                    'contrabaixo': 'Baixo',
+                    'contra-baixo': 'Baixo',
+                    'bass': 'Bass',
+                    'baixo': 'Baixo',
+                    'bateria': 'Bateria',
+                    'drums': 'Drums',
+                    'percussao': 'Percussão',
+                    'percussão': 'Percussão',
+                    'guitarra': 'Guitarra',
+                    'guitar': 'Guitar',
+                    'violao': 'Violão',
+                    'violão': 'Violão',
+                    'piano': 'Piano',
+                    'teclado': 'Teclado',
+                    'keyboard': 'Keyboard',
+                    'keys': 'Keys',
+                    'voz': 'Voz',
+                    'vocals': 'Vocals',
+                    'vocal': 'Vocal',
+                    'voice': 'Voice',
+                    'outros': 'Outros',
+                    'other': 'Other',
+                    'outro': 'Outro',
+                    'effects': 'Effects',
+                    'efeitos': 'Efeitos',
+                    'fx': 'FX'
+                };
+                
+                const lowerName = name.toLowerCase();
+                if (nameNormalization[lowerName]) {
+                    return nameNormalization[lowerName];
+                }
+                
+                // Capitaliza primeira letra como fallback
+                return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+            }
+
+            async fileExists(url) {
+                try {
+                    const response = await fetch(url, { method: 'HEAD' });
+                    return response.ok;
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+
+            showNoTracksMessage() {
+                this.tracksContainer.innerHTML = `
+                    <div class="loading">
+                        ❌ Nenhuma faixa encontrada na pasta "${this.musicFolder}"<br>
+                        <small>Verifique se os arquivos de áudio estão na pasta correta.</small>
+                    </div>
+                `;
+            }
+
+            initializeElements() {
+                this.playBtn = document.getElementById('playBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressFill = document.getElementById('progressFill');
+                this.currentTimeDisplay = document.getElementById('currentTime');
+                this.totalTimeDisplay = document.getElementById('totalTime');
+                this.tracksContainer = document.getElementById('tracksContainer');
+            }
+
+            async loadTracks() {
+                this.tracksContainer.innerHTML = '';
+                
+                for (const trackInfo of this.trackData) {
+                    const audio = new Audio(trackInfo.file);
+                    const track = {
+                        name: trackInfo.name,
+                        audio: audio,
+                        volume: 1,
+                        muted: false,
+                        element: null
+                    };
+
+                    audio.preload = 'auto';
+                    audio.volume = 1;
+                    
+                    audio.addEventListener('loadedmetadata', () => {
+                        if (this.duration === 0) {
+                            this.duration = audio.duration;
+                            this.updateTimeDisplay();
+                        }
+                    });
+
+                    audio.addEventListener('timeupdate', () => {
+                        if (this.isPlaying) {
+                            this.currentTime = audio.currentTime;
+                            this.updateProgress();
+                        }
+                    });
+
+                    audio.addEventListener('ended', () => {
+                        this.stop();
+                    });
+
+                    this.tracks.push(track);
+                    this.createTrackElement(track);
+                }
+            }
+
+            createTrackElement(track) {
+                const trackElement = document.createElement('div');
+                trackElement.className = 'track';
+                
+                // Capitaliza nome da faixa
+                const displayName = track.name.charAt(0).toUpperCase() + track.name.slice(1).toLowerCase();
+                
+                trackElement.innerHTML = `
+                    <div class="track-header">
+                        <div class="track-name">${displayName}</div>
+                        <div class="track-buttons">
+                            <button class="track-btn mute-btn" data-track="${track.name}">🔊 Mute</button>
+                            <button class="track-btn solo-btn" data-track="${track.name}">Solo</button>
+                        </div>
+                    </div>
+                    <div class="volume-control">
+                        <span class="volume-label">Volume:</span>
+                        <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="1" data-track="${track.name}">
+                        <span class="volume-value">100%</span>
+                    </div>
+                `;
+
+                track.element = trackElement;
+                this.tracksContainer.appendChild(trackElement);
+
+                const muteBtn = trackElement.querySelector('.mute-btn');
+                const soloBtn = trackElement.querySelector('.solo-btn');
+                const volumeSlider = trackElement.querySelector('.volume-slider');
+                const volumeValue = trackElement.querySelector('.volume-value');
+
+                muteBtn.addEventListener('click', () => this.toggleMute(track.name));
+                soloBtn.addEventListener('click', () => this.toggleSolo(track.name));
+                volumeSlider.addEventListener('input', (e) => {
+                    this.setVolume(track.name, parseFloat(e.target.value));
+                    volumeValue.textContent = Math.round(e.target.value * 100) + '%';
+                });
+            }
+
+            setupEventListeners() {
+                this.playBtn.addEventListener('click', () => this.play());
+                this.pauseBtn.addEventListener('click', () => this.pause());
+                this.stopBtn.addEventListener('click', () => this.stop());
+                
+                this.progressBar.addEventListener('click', (e) => {
+                    const rect = this.progressBar.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const percentage = clickX / rect.width;
+                    this.seek(percentage * this.duration);
+                });
+            }
+
+            play() {
+                if (this.tracks.length === 0) return;
+                
+                this.isPlaying = true;
+                this.tracks.forEach(track => {
+                    track.audio.currentTime = this.currentTime;
+                    track.audio.play();
+                });
+                
+                this.playBtn.style.opacity = '0.5';
+                this.pauseBtn.style.opacity = '1';
+            }
+
+            pause() {
+                this.isPlaying = false;
+                this.tracks.forEach(track => track.audio.pause());
+                
+                this.playBtn.style.opacity = '1';
+                this.pauseBtn.style.opacity = '0.5';
+            }
+
+            stop() {
+                this.isPlaying = false;
+                this.currentTime = 0;
+                
+                this.tracks.forEach(track => {
+                    track.audio.pause();
+                    track.audio.currentTime = 0;
+                });
+                
+                this.updateProgress();
+                this.playBtn.style.opacity = '1';
+                this.pauseBtn.style.opacity = '0.5';
+            }
+
+            seek(time) {
+                this.currentTime = time;
+                this.tracks.forEach(track => {
+                    track.audio.currentTime = time;
+                });
+                this.updateProgress();
+            }
+
+            toggleMute(trackName) {
+                const track = this.tracks.find(t => t.name === trackName);
+                if (!track) return;
+
+                track.muted = !track.muted;
+                const muteBtn = track.element.querySelector('.mute-btn');
+                
+                if (track.muted) {
+                    track.audio.volume = 0;
+                    muteBtn.textContent = '🔇 Unmute';
+                    muteBtn.classList.add('active');
+                } else {
+                    track.audio.volume = track.volume;
+                    muteBtn.textContent = '🔊 Mute';
+                    muteBtn.classList.remove('active');
+                }
+            }
+
+            toggleSolo(trackName) {
+                const track = this.tracks.find(t => t.name === trackName);
+                if (!track) return;
+
+                if (this.soloTrack === trackName) {
+                    this.soloTrack = null;
+                    this.tracks.forEach(t => {
+                        if (!t.muted) {
+                            t.audio.volume = t.volume;
+                        }
+                        const soloBtn = t.element.querySelector('.solo-btn');
+                        soloBtn.classList.remove('solo');
+                    });
+                } else {
+                    this.soloTrack = trackName;
+                    this.tracks.forEach(t => {
+                        const soloBtn = t.element.querySelector('.solo-btn');
+                        if (t.name === trackName) {
+                            t.audio.volume = t.muted ? 0 : t.volume;
+                            soloBtn.classList.add('solo');
+                        } else {
+                            t.audio.volume = 0;
+                            soloBtn.classList.remove('solo');
+                        }
+                    });
+                }
+            }
+
+            setVolume(trackName, volume) {
+                const track = this.tracks.find(t => t.name === trackName);
+                if (!track) return;
+
+                track.volume = volume;
+                if (!track.muted && (this.soloTrack === null || this.soloTrack === trackName)) {
+                    track.audio.volume = volume;
+                }
+            }
+
+            updateProgress() {
+                if (this.duration > 0) {
+                    const percentage = (this.currentTime / this.duration) * 100;
+                    this.progressFill.style.width = percentage + '%';
+                }
+                this.updateTimeDisplay();
+            }
+
+            updateTimeDisplay() {
+                this.currentTimeDisplay.textContent = this.formatTime(this.currentTime);
+                this.totalTimeDisplay.textContent = this.formatTime(this.duration);
+            }
+
+            formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.floor(seconds % 60);
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new MultiTrackPlayer();
+        });
+    </script>
+</body>
+</html>
