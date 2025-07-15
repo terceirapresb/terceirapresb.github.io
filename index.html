@@ -337,9 +337,12 @@
             async discoverTracks() {
                 const foundTracks = [];
                 
+                console.log('Buscando arquivos na pasta:', this.musicFolder);
+                
                 try {
                     // Primeira tentativa: listagem de diretório
                     const audioFiles = await this.bruteForceDiscoverFiles();
+                    console.log('Arquivos encontrados:', audioFiles);
                     
                     for (const fileName of audioFiles) {
                         const filePath = `audio/${this.musicFolder}/${fileName}`;
@@ -397,6 +400,8 @@
                 const audioExtensions = ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac'];
                 const foundFiles = [];
                 
+                console.log('Iniciando busca por instrumentos...');
+                
                 // Mapeamento de instrumentos com todas as variações possíveis
                 const instrumentVariations = {
                     'Bass': [
@@ -442,6 +447,7 @@
                 
                 // Busca por cada instrumento e suas variações
                 for (const [instrumentName, variations] of Object.entries(instrumentVariations)) {
+                    console.log(`Buscando ${instrumentName}...`);
                     let foundForInstrument = false;
                     
                     for (const variation of variations) {
@@ -452,14 +458,20 @@
                             const filePath = `audio/${this.musicFolder}/${fileName}`;
                             
                             if (await this.fileExists(filePath)) {
+                                console.log(`✅ Encontrado: ${fileName}`);
                                 foundFiles.push(fileName);
                                 foundForInstrument = true;
                                 break;
                             }
                         }
                     }
+                    
+                    if (!foundForInstrument) {
+                        console.log(`❌ Não encontrado: ${instrumentName}`);
+                    }
                 }
                 
+                console.log('Busca finalizada. Total encontrado:', foundFiles.length);
                 return foundFiles;
             }
 
@@ -526,10 +538,29 @@
 
             async fileExists(url) {
                 try {
-                    const response = await fetch(url, { method: 'HEAD' });
-                    return response.ok;
+                    // Codifica a URL para lidar com espaços e caracteres especiais
+                    const encodedUrl = encodeURI(url);
+                    console.log('Testando arquivo:', encodedUrl);
+                    
+                    // Tenta primeiro com HEAD
+                    const response = await fetch(encodedUrl, { method: 'HEAD' });
+                    const exists = response.ok;
+                    console.log(`Arquivo ${encodedUrl}: ${exists ? 'ENCONTRADO' : 'NÃO ENCONTRADO'} (status: ${response.status})`);
+                    return exists;
                 } catch (e) {
-                    return false;
+                    console.log(`Erro ao testar ${url}:`, e.message);
+                    
+                    // Se HEAD falhar, tenta GET como fallback
+                    try {
+                        const encodedUrl = encodeURI(url);
+                        const response = await fetch(encodedUrl);
+                        const exists = response.ok;
+                        console.log(`Arquivo ${encodedUrl} (fallback GET): ${exists ? 'ENCONTRADO' : 'NÃO ENCONTRADO'}`);
+                        return exists;
+                    } catch (e2) {
+                        console.log(`Fallback também falhou para ${url}:`, e2.message);
+                        return false;
+                    }
                 }
             }
             
