@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     class WebAudioMultiTrackPlayer {
         constructor() {
-            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.audioContext = null; // Initialize as null
             this.tracks = [];
             this.isPlaying = false;
             this.startTime = 0;
@@ -46,24 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             this.onProgressUpdate = () => {};
             this.onStateChange = () => {};
             this.onLoadProgress = () => {};
-
-            // Tenta retomar o AudioContext no primeiro toque/clique
-            const resumeContext = () => {
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume().then(() => {
-                        console.log('AudioContext resumed successfully.');
-                    }).catch(e => {
-                        console.error('Error resuming AudioContext:', e);
-                    });
-                }
-                // Remove os listeners após a primeira tentativa bem-sucedida ou falha
-                document.removeEventListener('touchstart', resumeContext);
-                document.removeEventListener('click', resumeContext);
-            };
-            document.addEventListener('touchstart', resumeContext, { once: true });
-            document.addEventListener('click', resumeContext, { once: true });
-
-            console.log('AudioContext initial state:', this.audioContext.state);
         }
 
         async load(trackList) {
@@ -152,16 +134,25 @@ document.addEventListener('DOMContentLoaded', () => {
         async play() {
             if (this.isPlaying || this.tracks.length === 0) return;
 
+            // Cria o AudioContext se ainda não foi criado
+            if (!this.audioContext) {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
             // Tenta retomar o AudioContext se estiver suspenso (necessário para mobile)
-            if (this.audioContext.state === 'suspended') {
+            if (this.audioContext.state === 'suspended' || this.audioContext.state === 'interrupted') {
                 try {
                     await this.audioContext.resume();
                 } catch (e) {
                     console.error("Falha ao retomar AudioContext:", e);
-                    // Opcional: exibir uma mensagem ao usuário que o áudio não pôde iniciar
+                    alert("Erro ao retomar AudioContext: " + e.message);
                     return; // Impede a reprodução se o contexto não puder ser retomado
                 }
+            } else if (this.audioContext.state === 'closed') {
+                // Se o contexto foi fechado, cria um novo
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
+
 
             this.isPlaying = true;
             this.startTime = this.audioContext.currentTime - this.pauseTime;
@@ -599,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ui.loadingStatus.style.color = 'red';
             ui.retryBtn.style.display = 'block'; // Mostra o botão de tentar novamente
             updateButtons(false, false, true); // Desabilita botões de play/pause/stop
-            alert(`Ocorreu um erro: ${state.error}`); // Adiciona o alert aqui
+            
         }
     };
 
