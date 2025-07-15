@@ -49,6 +49,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         async load(trackList) {
+            // Garante que o AudioContext esteja ativo para decodificação
+            if (!this.audioContext || this.audioContext.state === 'closed') {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (this.audioContext.state === 'suspended' || this.audioContext.state === 'interrupted') {
+                try {
+                    await this.audioContext.resume();
+                } catch (e) {
+                    console.error("Falha ao retomar AudioContext para decodificação:", e);
+                    this.onStateChange({ isLoading: false, error: "Erro ao preparar áudio para carregamento." });
+                    return; // Impede o carregamento se o contexto não puder ser retomado
+                }
+            }
+
             this.stop();
             this.tracks = [];
             this.onStateChange({ isLoading: true, duration: 0, currentTime: 0 });
