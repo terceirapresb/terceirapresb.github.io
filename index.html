@@ -9,38 +9,41 @@
 <body>
 
     <div class="player-container" id="player-container">
-        <h1 id="player-title">Player Multitrack</h1>
 
-        <div class="controls-main">
+        <div class="fixed-header" id="fixed-header">
+            <div class="header-top-row">
+                <h1 id="player-title">Player Multitrack</h1>
+                <div class="controls-main">
+                    <button id="play-btn" aria-label="Play">Play</button>
+                    <button id="pause-btn" aria-label="Pause">Pause</button>
+                    <button id="stop-btn" aria-label="Stop">Stop</button>
+                </div>
+            </div>
             <div class="song-selector" id="song-selector-container">
                 <label for="song-select">Escolha a Música:</label>
                 <select id="song-select"></select>
             </div>
-            <button id="play-btn">Play</button>
-            <button id="pause-btn">Pause</button>
-            <button id="stop-btn">Stop</button>
+            <div class="timeline">
+                <span id="time-current">0:00</span>
+                <input type="range" id="progress-bar" value="0" step="0.1" disabled role="slider" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
+                <span id="time-duration">0:00</span>
+            </div>
         </div>
 
-        <div class="timeline">
-            <span id="time-current">0:00</span>
-            <input type="range" id="progress-bar" value="0" step="0.1" disabled>
-            <span id="time-duration">0:00</span>
-        </div>
-
-        <div id="loading-status">
-            <p>Pronto para carregar.</p>
-        </div>
-
-        <div id="tracks-container">
-            <!-- Controles de faixa individuais serão inseridos aqui -->
+        <div class="scrollable-content">
+            <div id="loading-status" aria-live="polite">
+                <p>Pronto para carregar.</p>
+            </div>
+            <button id="retry-btn" style="display: none;">Tentar Novamente</button>
+            <div id="tracks-container">
+                <!-- Controles de faixa individuais serão inseridos aqui -->
+            </div>
         </div>
     </div>
 
     <script src="main.js" 
             id="multitrack-player-script" 
-            data-musica=""
-            data-width=""
-            data-height="">
+            data-musica="">
     </script>
 </body>
 </html>
