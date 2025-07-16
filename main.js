@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Detecta se é um iPhone/iPad
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+        alert("Detectado: iPhone/iPad. O áudio pode ter restrições de reprodução automática.");
+    }
+
     const songs = {
         "Clamo Jesus": [
             { name: "Bass", path: "audio/Clamo Jesus/Bass.mp3" },
@@ -37,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     class WebAudioMultiTrackPlayer {
         constructor() {
-            this.audioContext = null; // Initialize as null
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
             this.tracks = [];
             this.isPlaying = false;
             this.startTime = 0;
@@ -46,23 +52,27 @@ document.addEventListener('DOMContentLoaded', () => {
             this.onProgressUpdate = () => {};
             this.onStateChange = () => {};
             this.onLoadProgress = () => {};
+
+            // Tenta retomar o AudioContext no primeiro toque/clique
+            const resumeContext = () => {
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume().then(() => {
+                        console.log('AudioContext resumed successfully.');
+                    }).catch(e => {
+                        console.error('Error resuming AudioContext:', e);
+                    });
+                }
+                // Remove os listeners após a primeira tentativa bem-sucedida ou falha
+                document.removeEventListener('touchstart', resumeContext);
+                document.removeEventListener('click', resumeContext);
+            };
+            document.addEventListener('touchstart', resumeContext, { once: true });
+            document.addEventListener('click', resumeContext, { once: true });
+
+            console.log('AudioContext initial state:', this.audioContext.state);
         }
 
         async load(trackList) {
-            // Garante que o AudioContext esteja ativo para decodificação
-            if (!this.audioContext || this.audioContext.state === 'closed') {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (this.audioContext.state === 'suspended' || this.audioContext.state === 'interrupted') {
-                try {
-                    await this.audioContext.resume();
-                } catch (e) {
-                    console.error("Falha ao retomar AudioContext para decodificação:", e);
-                    this.onStateChange({ isLoading: false, error: "Erro ao preparar áudio para carregamento." });
-                    return; // Impede o carregamento se o contexto não puder ser retomado
-                }
-            }
-
             this.stop();
             this.tracks = [];
             this.onStateChange({ isLoading: true, duration: 0, currentTime: 0 });
@@ -147,11 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         async play() {
             if (this.isPlaying || this.tracks.length === 0) return;
-
-            // Cria o AudioContext se ainda não foi criado
-            if (!this.audioContext) {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
 
             // Tenta retomar o AudioContext se estiver suspenso (necessário para mobile)
             if (this.audioContext.state === 'suspended' || this.audioContext.state === 'interrupted') {
@@ -396,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ui.loadingStatus.style.color = 'red';
             ui.retryBtn.style.display = 'block'; // Mostra o botão de tentar novamente
             updateButtons(false, false, true); // Desabilita botões de play/pause/stop
+            alert(`Ocorreu um erro: ${state.error}`);
             return;
         }
         
