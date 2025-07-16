@@ -1,4 +1,5 @@
 name: Generate Songs JSON
+run-name: Generate Songs JSON
 
 on:
   push:
