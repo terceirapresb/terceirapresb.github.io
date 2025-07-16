@@ -231,6 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Mapeia o slider de 0-1.5 para um ganho em dB
         // -60dB (quase mudo) a +6dB (um pouco acima do normal)
         linearToLogarithmicGain(linearValue) {
+            if (linearValue === 1.0) return 1.0; // Mantém 100% como ganho unitário
             const minDb = -60; // Quase mudo
             const maxDb = 6;   // Um pouco acima do normal
             // Normaliza o valor linear (0-1.5) para 0-1
