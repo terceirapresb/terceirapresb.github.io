@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
     // Detecta se é um iPhone/iPad
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -6,40 +6,52 @@ document.addEventListener('DOMContentLoaded', () => {
         alert("Detectado: iPhone/iPad. O áudio pode ter restrições de reprodução automática.");
     }
 
-    const songs = {
-        "Clamo Jesus": [
-            { name: "Bass", path: "audio/Clamo Jesus/Bass.mp3" },
-            { name: "Drums", path: "audio/Clamo Jesus/Drums.mp3" },
-            { name: "Guitar", path: "audio/Clamo Jesus/Guitar.mp3" },
-            { name: "Other", path: "audio/Clamo Jesus/Other.mp3" },
-            { name: "Piano", path: "audio/Clamo Jesus/Piano.mp3" },
-            { name: "Vocals", path: "audio/Clamo Jesus/Vocals.mp3" },
-        ],
-        "Eu e minha casa": [
-            { name: "Bass", path: "audio/Eu e minha casa/Bass.mp3" },
-            { name: "Drums", path: "audio/Eu e minha casa/Drums.mp3" },
-            { name: "Guitar", path: "audio/Eu e minha casa/Guitar.mp3" },
-            { name: "Other", path: "audio/Eu e minha casa/Other.mp3" },
-            { name: "Piano", path: "audio/Eu e minha casa/Piano.mp3" },
-            { name: "Vocals", path: "audio/Eu e minha casa/Vocals.mp3" },
-        ],
-        "Galileu": [
-            { name: "Bass", path: "audio/Galileu/Bass.mp3" },
-            { name: "Drums", path: "audio/Galileu/Drums.mp3" },
-            { name: "Guitar", path: "audio/Galileu/Guitar.mp3" },
-            { name: "Other", path: "audio/Galileu/Other.mp3" },
-            { name: "Piano", path: "audio/Galileu/Piano.mp3" },
-            { name: "Vocals", path: "audio/Galileu/Vocals.mp3" },
-        ],
-        "O senhor dos exercitos": [
-            { name: "Bass", path: "audio/O senhor dos exercitos/Bass.mp3" },
-            { name: "Drums", path: "audio/O senhor dos exercitos/Drums.mp3" },
-            { name: "Guitar", path: "audio/O senhor dos exercitos/Guitar.mp3" },
-            { name: "Other", path: "audio/O senhor dos exercitos/Other.mp3" },
-            { name: "Piano", path: "audio/O senhor dos exercitos/Piano.mp3" },
-            { name: "Vocals", path: "audio/O senhor dos exercitos/Vocals.mp3" },
-        ]
-    };
+    let songs = {};
+
+    // Função para carregar as músicas do arquivo JSON
+    async function loadSongs() {
+        try {
+            console.log('🎵 Carregando lista de músicas...');
+            const response = await fetch('songs.json');
+            
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+            }
+            
+            const loadedSongs = await response.json();
+            console.log('✅ Músicas carregadas com sucesso:', Object.keys(loadedSongs));
+            return loadedSongs;
+            
+        } catch (error) {
+            console.error('❌ Erro ao carregar songs.json:', error);
+            
+            // Mostra erro na interface
+            const container = document.getElementById('player-container');
+            if (container) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: red;">
+                        <h2>❌ Erro ao Carregar Músicas</h2>
+                        <p>Não foi possível carregar o arquivo songs.json</p>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                        <p>Verifique se o arquivo songs.json existe e está no formato correto.</p>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px;">
+                            🔄 Tentar Novamente
+                        </button>
+                    </div>
+                `;
+            }
+            
+            throw error;
+        }
+    }
+
+    // Carrega as músicas antes de inicializar tudo
+    try {
+        songs = await loadSongs();
+    } catch (error) {
+        // Se chegou aqui, o erro já foi mostrado na interface
+        return;
+    }
 
     class WebAudioMultiTrackPlayer {
         constructor() {

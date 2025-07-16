@@ -1,0 +1,39 @@
+name: Generate Songs JSON
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'audio/**'
+  # Permite execução manual também
+  workflow_dispatch:
+
+jobs:
+  build-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clona o repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura o Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 3. Executa o script de geração do JSON
+      - name: Generate songs.json
+        run: node generate-songs.js
+
+      # 4. Verifica se houve mudanças e faz commit
+      - name: Commit and push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '🎵 Auto-update songs.json'
+          file_pattern: 'songs.json'
+          commit_user_name: 'GitHub Actions Bot'
+          commit_user_email: 'actions@github.com'
+          commit_author: 'GitHub Actions Bot <actions@github.com>'
