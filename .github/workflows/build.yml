@@ -9,6 +9,10 @@ on:
   # Permite execução manual também
   workflow_dispatch:
 
+# Permissões necessárias para o GitHub Actions fazer commit
+permissions:
+  contents: write
+
 jobs:
   build-json:
     runs-on: ubuntu-latest
