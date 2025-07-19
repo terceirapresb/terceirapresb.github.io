@@ -2,9 +2,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Detecta se é um iPhone/iPad
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if (isIOS) {
-        alert("Detectado: iPhone/iPad. O áudio pode ter restrições de reprodução automática.");
-    }
+    
+    // Variáveis para controle do estado de inicialização do iOS
+    let isAudioUnlocked = false;
+    let unlockButton = null;
 
     let songs = {};
 
@@ -64,24 +65,68 @@ document.addEventListener('DOMContentLoaded', async () => {
             this.onProgressUpdate = () => {};
             this.onStateChange = () => {};
             this.onLoadProgress = () => {};
+            this.isUnlocked = false;
 
-            // Tenta retomar o AudioContext no primeiro toque/clique
-            const resumeContext = () => {
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume().then(() => {
-                        console.log('AudioContext resumed successfully.');
-                    }).catch(e => {
-                        console.error('Error resuming AudioContext:', e);
-                    });
-                }
-                // Remove os listeners após a primeira tentativa bem-sucedida ou falha
-                document.removeEventListener('touchstart', resumeContext);
-                document.removeEventListener('click', resumeContext);
-            };
-            document.addEventListener('touchstart', resumeContext, { once: true });
-            document.addEventListener('click', resumeContext, { once: true });
+            // iOS 17+ Audio Session API
+            if ('audioSession' in navigator) {
+                navigator.audioSession.type = 'playback';
+                console.log('Audio Session API configurada para playback');
+            }
+
+            // Implementação robusta de desbloqueio para iOS
+            this.setupIOSUnlock();
 
             console.log('AudioContext initial state:', this.audioContext.state);
+        }
+
+        setupIOSUnlock() {
+            const unlockAudioContext = async () => {
+                if (this.isUnlocked) return;
+                
+                try {
+                    // Cria e reproduz buffer silencioso
+                    const buffer = this.audioContext.createBuffer(1, 1, 22050);
+                    const source = this.audioContext.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(this.audioContext.destination);
+                    
+                    // Compatibilidade com versões antigas
+                    if (source.start) {
+                        source.start(0);
+                    } else if (source.noteOn) {
+                        source.noteOn(0);
+                    }
+                    
+                    // Resume o contexto
+                    if (this.audioContext.state === 'suspended') {
+                        await this.audioContext.resume();
+                    }
+                    
+                    if (this.audioContext.state === 'running') {
+                        this.isUnlocked = true;
+                        isAudioUnlocked = true;
+                        console.log('AudioContext desbloqueado com sucesso!');
+                        
+                        // Remove o botão de desbloqueio se existir
+                        if (unlockButton) {
+                            unlockButton.remove();
+                            unlockButton = null;
+                        }
+                        
+                        // Remove todos os listeners de desbloqueio
+                        ['touchstart', 'touchend', 'click'].forEach(event => {
+                            document.removeEventListener(event, unlockAudioContext);
+                        });
+                    }
+                } catch (e) {
+                    console.error('Erro ao desbloquear AudioContext:', e);
+                }
+            };
+
+            // Adiciona múltiplos listeners para garantir o desbloqueio
+            ['touchstart', 'touchend', 'click'].forEach(event => {
+                document.addEventListener(event, unlockAudioContext, { once: true });
+            });
         }
 
         async load(trackList) {
@@ -120,6 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         downloadProgress[index] = 1; // Ensure download is marked as 100%
                         updateOverallProgress();
 
+                        // Usa a versão com callback para melhor compatibilidade com Safari
                         this.audioContext.decodeAudioData(request.response, (buffer) => {
                             const analyser = this.audioContext.createAnalyser();
                             analyser.fftSize = 256;
@@ -170,20 +216,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         async play() {
             if (this.isPlaying || this.tracks.length === 0) return;
 
-            // Tenta retomar o AudioContext se estiver suspenso (necessário para mobile)
+            // Verifica se o áudio está desbloqueado no iOS
+            if (isIOS && !this.isUnlocked) {
+                console.warn('AudioContext não está desbloqueado no iOS');
+                // Tenta desbloquear novamente
+                await this.forceUnlock();
+                if (!this.isUnlocked) {
+                    alert('Por favor, toque na tela primeiro para habilitar o áudio no iOS.');
+                    return;
+                }
+            }
+
+            // Tenta retomar o AudioContext se estiver suspenso
             if (this.audioContext.state === 'suspended' || this.audioContext.state === 'interrupted') {
                 try {
                     await this.audioContext.resume();
+                    // Aguarda um momento para garantir que o contexto está pronto
+                    await new Promise(resolve => setTimeout(resolve, 100));
                 } catch (e) {
                     console.error("Falha ao retomar AudioContext:", e);
-                    alert("Erro ao retomar AudioContext: " + e.message);
-                    return; // Impede a reprodução se o contexto não puder ser retomado
+                    alert("Erro ao iniciar áudio. Por favor, tente novamente.");
+                    return;
                 }
             } else if (this.audioContext.state === 'closed') {
                 // Se o contexto foi fechado, cria um novo
                 this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.setupIOSUnlock();
+                await this.forceUnlock();
             }
 
+            // Verifica novamente o estado antes de prosseguir
+            if (this.audioContext.state !== 'running') {
+                console.error('AudioContext não está em estado running:', this.audioContext.state);
+                return;
+            }
 
             this.isPlaying = true;
             this.startTime = this.audioContext.currentTime - this.pauseTime;
@@ -191,12 +257,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             this.tracks.forEach(track => {
                 track.source = this.audioContext.createBufferSource();
                 track.source.buffer = track.buffer;
-                track.source.connect(track.analyser); // Conecta source ao analyser primeiro
+                track.source.connect(track.analyser);
                 track.source.start(this.audioContext.currentTime, this.pauseTime);
             });
 
             this.onStateChange({ isPlaying: true });
             this._startProgressLoop();
+        }
+
+        async forceUnlock() {
+            if (this.isUnlocked) return;
+            
+            try {
+                const buffer = this.audioContext.createBuffer(1, 1, 22050);
+                const source = this.audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(this.audioContext.destination);
+                
+                if (source.start) {
+                    source.start(0);
+                } else if (source.noteOn) {
+                    source.noteOn(0);
+                }
+                
+                if (this.audioContext.state === 'suspended') {
+                    await this.audioContext.resume();
+                }
+                
+                if (this.audioContext.state === 'running') {
+                    this.isUnlocked = true;
+                    isAudioUnlocked = true;
+                    console.log('AudioContext forçadamente desbloqueado!');
+                }
+            } catch (e) {
+                console.error('Erro ao forçar desbloqueio:', e);
+            }
         }
 
         pause() {
@@ -328,6 +423,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- LÓGICA DA UI ---
     const player = new WebAudioMultiTrackPlayer();
+    
+    // Cria botão de inicialização para iOS se necessário
+    if (isIOS && !isAudioUnlocked) {
+        createIOSUnlockButton();
+    }
+    
+    function createIOSUnlockButton() {
+        unlockButton = document.createElement('div');
+        unlockButton.className = 'ios-unlock-overlay';
+        unlockButton.innerHTML = `
+            <div class="ios-unlock-modal">
+                <h2>🎵 Iniciar Player de Áudio</h2>
+                <p>O iOS requer sua permissão para reproduzir áudio.</p>
+                <button class="ios-unlock-btn">Tocar para Iniciar</button>
+            </div>
+        `;
+        document.body.appendChild(unlockButton);
+        
+        const btnElement = unlockButton.querySelector('.ios-unlock-btn');
+        btnElement.addEventListener('click', async () => {
+            btnElement.textContent = 'Inicializando...';
+            btnElement.disabled = true;
+            
+            // Força o desbloqueio
+            await player.forceUnlock();
+            
+            if (player.isUnlocked) {
+                unlockButton.remove();
+                unlockButton = null;
+            } else {
+                btnElement.textContent = 'Tentar Novamente';
+                btnElement.disabled = false;
+            }
+        });
+    }
     const ui = {
         container: document.getElementById('player-container'),
         title: document.getElementById('player-title'),
@@ -379,7 +509,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function setupEventListeners() {
-        ui.playBtn.addEventListener('click', () => player.play());
+        ui.playBtn.addEventListener('click', async () => {
+            if (isIOS && !player.isUnlocked) {
+                // No iOS, mostra feedback enquanto tenta desbloquear
+                const originalText = ui.playBtn.textContent;
+                ui.playBtn.textContent = 'Iniciando...';
+                ui.playBtn.disabled = true;
+                
+                await player.play();
+                
+                ui.playBtn.textContent = originalText;
+                ui.playBtn.disabled = false;
+            } else {
+                player.play();
+            }
+        });
         ui.pauseBtn.addEventListener('click', () => player.pause());
         ui.stopBtn.addEventListener('click', () => player.stop());
         ui.retryBtn.addEventListener('click', () => loadSong(currentSongName));
@@ -390,10 +534,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 player.seek(time);
             }
         };
-        ui.progressBar.addEventListener('mousedown', () => isSeeking = true);
+        // Eventos de seek com suporte para touch
+        const startSeeking = () => isSeeking = true;
+        const stopSeeking = () => isSeeking = false;
+        
+        ui.progressBar.addEventListener('mousedown', startSeeking);
+        ui.progressBar.addEventListener('touchstart', startSeeking);
         ui.progressBar.addEventListener('input', onSeek);
-        ui.progressBar.addEventListener('change', onSeek); // For keyboard/accessibility
-        ui.progressBar.addEventListener('mouseup', () => isSeeking = false);
+        ui.progressBar.addEventListener('change', onSeek);
+        ui.progressBar.addEventListener('mouseup', stopSeeking);
+        ui.progressBar.addEventListener('touchend', stopSeeking);
 
         // Adiciona aria-valuetext para o progresso
         ui.progressBar.setAttribute('aria-valuetext', `0 minutos e 0 segundos de ${formatTime(player.getDuration())}`);
