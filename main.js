@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const player = new WebAudioMultiTrackPlayer();
     const ui = getUIElements();
     let currentSongName = null;
+    let isLoading = false;
 
     if (isIOS && !player.isUnlocked) {
         createIOSUnlockButton(player, () => {
@@ -54,6 +55,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function loadSong(songName) {
+        if (isLoading) {
+            console.warn('Uma música já está sendo carregada. A nova solicitação foi ignorada.');
+            return;
+        }
+        isLoading = true;
+
         if (!songName || !songs[songName]) {
             ui.loadingStatus.textContent = `Erro: Música "${songName}" não encontrada.`;
             ui.loadingStatus.style.color = 'red';
@@ -94,6 +101,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             ui.retryBtn.style.display = 'block';
             console.error("Load song error:", error);
             updateButtons(ui, player, false, false, true);
+        } finally {
+            isLoading = false;
         }
     }
 
