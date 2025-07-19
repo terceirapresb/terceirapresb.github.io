@@ -69,19 +69,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert(`Ocorreu um erro: música não encontrada`);
             return;
         }
-        
+
         if (isIOS && player.audioContext.state === 'suspended') {
             console.log('AudioContext foi suspenso. Tentando reativar...');
             player.isUnlocked = false;
-            
+
             await player.forceUnlock();
-            
+
             if (!player.isUnlocked) {
                 createIOSUnlockButton(player, () => loadSong(songName));
                 return;
             }
         }
-        
+
         ui.title.textContent = songName;
         updateButtons(ui, player, false, true);
         ui.retryBtn.style.display = 'none';
@@ -90,12 +90,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         ui.loadingStatus.style.color = 'var(--light-text-color)';
 
         try {
-            player.setCurrentSongMetadata(songs[songName].bpm, songs[songName].tom);
-            await player.load(songs[songName].tracks);
+            await player.load(songs[songName]);
             ui.loadingStatus.innerHTML = `✅ Música "${songName}" carregada com sucesso!`;
             renderTrackControls(player, ui.tracksContainer);
             updateButtons(ui, player, false, false);
-            updatePracticeControlsUI(ui, player); // Atualiza os controles de prática
 
         } catch (error) {
             ui.loadingStatus.textContent = `Erro ao carregar a música: ${error.message}.`;
@@ -167,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     player.onLoadProgress = (progress) => {
         const songName = ui.songSelect.value || ui.title.textContent;
         let statusText = `🎵 ${songName}`;
-        
+
         if (progress.phase === 'preparando') {
             statusText += ` - Preparando...`;
         } else if (progress.phase === 'baixando') {
@@ -177,9 +175,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             statusText += ` - Processando: ${progress.currentTrack}`;
             statusText += ` (${progress.decodedTracks}/${progress.totalTracks} faixas)`;
         }
-        
+
         statusText += ` - ${progress.percentage}%`;
-        
+
         const progressBar = `<div style="
             width: 100%;
             height: 4px;
@@ -195,7 +193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 transition: width 0.3s ease;
             "></div>
         </div>`;
-        
+
         ui.loadingStatus.innerHTML = statusText + progressBar;
         ui.loadingStatus.style.color = 'var(--light-text-color)';
     };

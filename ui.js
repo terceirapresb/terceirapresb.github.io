@@ -21,14 +21,7 @@ export function getUIElements() {
         scriptTag: document.getElementById('multitrack-player-script'),
         fixedHeader: document.getElementById('fixed-header'),
         retryBtn: document.getElementById('retry-btn'),
-        resetBtn: document.getElementById('reset-btn'),
-        // Controles de Prática
-        practiceControlsContainer: document.getElementById('practice-controls'),
-        bpmSlider: document.getElementById('bpm-slider'),
-        bpmValue: document.getElementById('bpm-value'),
-        keySelector: document.getElementById('key-selector'),
-        metronomeToggle: document.getElementById('metronome-toggle'),
-        metronomeVolume: document.getElementById('metronome-volume')
+        resetBtn: document.getElementById('reset-btn')
     };
 }
 
@@ -45,14 +38,14 @@ export function createIOSUnlockButton(player, onUnlock) {
         </div>
     `;
     document.body.appendChild(unlockButton);
-    
+
     const btnElement = unlockButton.querySelector('.ios-unlock-btn');
     btnElement.addEventListener('click', async () => {
         btnElement.textContent = 'Inicializando...';
         btnElement.disabled = true;
-        
+
         await player.forceUnlock();
-        
+
         if (player.isUnlocked) {
             unlockButton.remove();
             unlockButton = null;
@@ -220,9 +213,9 @@ export function setupEventListeners(ui, player, loadSongCallback) {
             const originalText = ui.playBtn.textContent;
             ui.playBtn.textContent = 'Iniciando...';
             ui.playBtn.disabled = true;
-            
+
             await player.play();
-            
+
             ui.playBtn.textContent = originalText;
             ui.playBtn.disabled = false;
         } else {
@@ -241,7 +234,7 @@ export function setupEventListeners(ui, player, loadSongCallback) {
     };
     const startSeeking = () => isSeeking = true;
     const stopSeeking = () => isSeeking = false;
-    
+
     ui.progressBar.addEventListener('mousedown', startSeeking);
     ui.progressBar.addEventListener('touchstart', startSeeking);
     ui.progressBar.addEventListener('input', onSeek);
@@ -251,11 +244,9 @@ export function setupEventListeners(ui, player, loadSongCallback) {
 
     ui.progressBar.setAttribute('aria-valuetext', `0 minutos e 0 segundos de ${formatTime(player.getDuration())}`);
 
-    // Listener para o botão de reset
     ui.resetBtn.addEventListener('click', () => {
         player.resetMix();
-        
-        // Itera sobre as faixas para atualizar a UI de cada uma
+
         player.tracks.forEach(track => {
             if (track.uiElements.volumeSlider) {
                 track.uiElements.volumeSlider.value = track.volume;
@@ -266,48 +257,6 @@ export function setupEventListeners(ui, player, loadSongCallback) {
         });
         updateTrackControlVisuals(player);
     });
-
-    // --- Controles de Prática ---
-    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    notes.forEach(note => {
-        const option = document.createElement('option');
-        option.value = note;
-        option.textContent = note;
-        ui.keySelector.appendChild(option);
-    });
-
-    ui.bpmSlider.addEventListener('input', (e) => {
-        const bpm = parseInt(e.target.value);
-        player.setBpm(bpm);
-        ui.bpmValue.textContent = bpm;
-    });
-
-    ui.keySelector.addEventListener('change', (e) => {
-        const key = e.target.value;
-        player.setKey(key);
-    });
-
-    ui.metronomeToggle.addEventListener('click', () => {
-        const enabled = player.toggleMetronome();
-        ui.metronomeToggle.textContent = enabled ? 'On' : 'Off';
-        ui.metronomeToggle.classList.toggle('active', enabled);
-    });
-
-    ui.metronomeVolume.addEventListener('input', (e) => {
-        const volume = parseFloat(e.target.value);
-        player.setMetronomeVolume(volume);
-    });
-}
-
-export function updatePracticeControlsUI(ui, player) {
-    ui.practiceControlsContainer.style.display = 'block'; // Mostra os controles
-    ui.bpmSlider.value = player.currentBpm;
-    ui.bpmValue.textContent = player.currentBpm;
-    ui.keySelector.value = player.currentKey.replace('m', ''); // Seleciona a nota base
-    ui.metronomeToggle.textContent = player.metronomeEnabled ? 'On' : 'Off';
-    ui.metronomeToggle.classList.toggle('active', player.metronomeEnabled);
-    ui.metronomeVolume.value = player.metronomeVolume;
-}
 
     const updateScrollableHeight = () => {
         const headerHeight = ui.fixedHeader.offsetHeight;

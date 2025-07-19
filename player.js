@@ -1,3 +1,4 @@
+
 // Detecta se é um iPhone/iPad
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -13,21 +14,6 @@ export default class WebAudioMultiTrackPlayer {
         this.onStateChange = () => {};
         this.onLoadProgress = () => {};
         this.isUnlocked = false;
-
-        // Propriedades para BPM e Tom
-        this.originalBpm = 120;
-        this.currentBpm = 120;
-        this.originalKey = 'C';
-        this.currentKey = 'C';
-        this.pitchSemitones = 0;
-
-        // Propriedades do Metrônomo
-        this.metronomeEnabled = false;
-        this.metronomeVolume = 0.5;
-        this.metronomeGainNode = this.audioContext.createGain();
-        this.metronomeGainNode.gain.value = 0;
-        this.metronomeGainNode.connect(this.audioContext.destination);
-        this.nextBeatTime = 0;
 
         if ('audioSession' in navigator) {
             navigator.audioSession.type = 'playback';
@@ -50,27 +36,27 @@ export default class WebAudioMultiTrackPlayer {
     setupIOSUnlock() {
         const unlockAudioContext = async () => {
             if (this.isUnlocked) return;
-            
+
             try {
                 const buffer = this.audioContext.createBuffer(1, 1, 22050);
                 const source = this.audioContext.createBufferSource();
                 source.buffer = buffer;
                 source.connect(this.audioContext.destination);
-                
+
                 if (source.start) {
                     source.start(0);
                 } else if (source.noteOn) {
                     source.noteOn(0);
                 }
-                
+
                 if (this.audioContext.state === 'suspended') {
                     await this.audioContext.resume();
                 }
-                
+
                 if (this.audioContext.state === 'running') {
                     this.isUnlocked = true;
                     console.log('AudioContext desbloqueado com sucesso!');
-                    
+
                     ['touchstart', 'touchend', 'click'].forEach(event => {
                         document.removeEventListener(event, unlockAudioContext);
                     });
@@ -104,8 +90,8 @@ export default class WebAudioMultiTrackPlayer {
             const downloadPart = (downloadProgress.reduce((a, b) => a + b, 0) / totalCount) * DOWNLOAD_WEIGHT;
             const decodePart = (decodedTracks / totalCount) * DECODE_WEIGHT;
             const percentage = Math.round((downloadPart + decodePart) * 100);
-            this.onLoadProgress({ 
-                percentage, 
+            this.onLoadProgress({
+                percentage,
                 currentTrack: currentLoadingTrack,
                 phase: loadingPhase,
                 totalTracks: totalCount,
@@ -139,17 +125,10 @@ export default class WebAudioMultiTrackPlayer {
                     this.audioContext.decodeAudioData(request.response, (buffer) => {
                         const analyser = this.audioContext.createAnalyser();
                         analyser.fftSize = 256;
-
-                        // --- Integração SoundTouchJS ---
-                        const stretcher = new soundtouch.StretchingNode(this.audioContext, 2048, 2, 2);
-                        stretcher.tempo = 1.0; // Inicialmente, a velocidade é normal
-                        stretcher.pitch = 1.0; // Inicialmente, o tom é normal
-
                         this.tracks.push({
                             name: trackInfo.name,
                             buffer: buffer,
                             source: null,
-                            stretcher: stretcher, // Armazena a referência ao nó do SoundTouch
                             gainNode: this.audioContext.createGain(),
                             analyser: analyser,
                             volumeData: new Uint8Array(analyser.frequencyBinCount),
@@ -181,10 +160,8 @@ export default class WebAudioMultiTrackPlayer {
             this.onLoadProgress({ percentage: 100 });
             this.tracks.sort((a, b) => trackList.findIndex(t => t.name === a.name) - trackList.findIndex(t => t.name === b.name));
             this.tracks.forEach(track => {
-                // Conexão: source -> stretcher -> analyser -> gainNode -> destination
-                track.stretcher.connect(track.analyser);
                 track.analyser.connect(track.gainNode);
-                track.gainNode.connect(this.audioContext.destination);
+                track.gainNode.connect(this.audioContext.destination); // Conecta à saída principal
             });
             this.onStateChange({ isLoading: false, duration: this.getDuration() });
         } catch (error) {
@@ -231,34 +208,33 @@ export default class WebAudioMultiTrackPlayer {
         this.tracks.forEach(track => {
             track.source = this.audioContext.createBufferSource();
             track.source.buffer = track.buffer;
-            track.source.connect(track.stretcher); // Conecta a fonte ao stretcher
+            track.source.connect(track.analyser);
             track.source.start(this.audioContext.currentTime, this.pauseTime);
         });
 
         this.onStateChange({ isPlaying: true });
         this._startProgressLoop();
-        this._startMetronome(); // Inicia o metrônomo
     }
 
     async forceUnlock() {
         if (this.isUnlocked) return;
-        
+
         try {
             const buffer = this.audioContext.createBuffer(1, 1, 22050);
             const source = this.audioContext.createBufferSource();
             source.buffer = buffer;
             source.connect(this.audioContext.destination);
-            
+
             if (source.start) {
                 source.start(0);
             } else if (source.noteOn) {
                 source.noteOn(0);
             }
-            
+
             if (this.audioContext.state === 'suspended') {
                 await this.audioContext.resume();
             }
-            
+
             if (this.audioContext.state === 'running') {
                 this.isUnlocked = true;
                 console.log('AudioContext forçadamente desbloqueado!');
@@ -275,7 +251,6 @@ export default class WebAudioMultiTrackPlayer {
         this.isPlaying = false;
         this.onStateChange({ isPlaying: false });
         this._stopProgressLoop();
-        this._stopMetronome(); // Para o metrônomo
     }
 
     stop() {
@@ -287,7 +262,6 @@ export default class WebAudioMultiTrackPlayer {
         this.pauseTime = 0;
         this.onStateChange({ isPlaying: false, currentTime: 0 });
         this._stopProgressLoop();
-        this._stopMetronome(); // Para o metrônomo
     }
 
     seek(time) {
@@ -347,7 +321,7 @@ export default class WebAudioMultiTrackPlayer {
         if (!track) return false;
 
         track.isSoloed = !track.isSoloed;
-        
+
         this._updateGains();
         return this.tracks.map(t => ({ name: t.name, isSoloed: t.isSoloed }));
     }
@@ -397,120 +371,11 @@ export default class WebAudioMultiTrackPlayer {
         });
         this._updateGains();
 
-        return this.tracks.map(t => ({ 
-            name: t.name, 
-            volume: t.volume, 
-            isMuted: t.isMuted, 
-            isSoloed: t.isSoloed 
+        return this.tracks.map(t => ({
+            name: t.name,
+            volume: t.volume,
+            isMuted: t.isMuted,
+            isSoloed: t.isSoloed
         }));
-    }
-
-    // --- Funções de Metrônomo ---
-    _startMetronome() {
-        if (!this.metronomeEnabled) return;
-        this.nextBeatTime = this.audioContext.currentTime;
-        this._scheduleBeat();
-    }
-
-    _stopMetronome() {
-        // Não há muito o que fazer aqui além de parar o agendamento futuro
-        // Os nós de áudio agendados terminarão por conta própria
-    }
-
-    _scheduleBeat() {
-        if (!this.metronomeEnabled || !this.isPlaying) return;
-
-        const beatInterval = 60 / this.currentBpm; // Tempo em segundos por batida
-
-        while (this.nextBeatTime < this.audioContext.currentTime + 0.1) { // Agendar 0.1s à frente
-            // Cria um oscilador para o click do metrônomo
-            const osc = this.audioContext.createOscillator();
-            const gain = this.audioContext.createGain();
-
-            osc.connect(gain);
-            gain.connect(this.metronomeGainNode);
-
-            osc.type = 'sine'; // Onda senoidal para um som limpo
-            osc.frequency.setValueAtTime(880, this.nextBeatTime); // Frequência do click (A5)
-            gain.gain.setValueAtTime(1, this.nextBeatTime); // Volume total no início
-
-            // Fade out rápido para um click curto
-            gain.gain.exponentialRampToValueAtTime(0.001, this.nextBeatTime + 0.05); 
-            osc.start(this.nextBeatTime);
-            osc.stop(this.nextBeatTime + 0.05); // Duração do click
-
-            this.nextBeatTime += beatInterval;
-        }
-
-        // Agendar a próxima chamada para _scheduleBeat
-        requestAnimationFrame(() => this._scheduleBeat());
-    }
-
-    toggleMetronome() {
-        this.metronomeEnabled = !this.metronomeEnabled;
-        this.metronomeGainNode.gain.value = this.metronomeEnabled ? this.metronomeVolume : 0;
-        if (this.metronomeEnabled && this.isPlaying) {
-            this._startMetronome();
-        } else {
-            this._stopMetronome();
-        }
-        return this.metronomeEnabled;
-    }
-
-    setMetronomeVolume(volume) {
-        this.metronomeVolume = volume;
-        if (this.metronomeEnabled) {
-            this.metronomeGainNode.gain.value = volume;
-        }
-    }
-
-    // --- Funções de BPM e Tom ---
-    setBpm(newBpm) {
-        this.currentBpm = newBpm;
-        const tempoRatio = newBpm / this.originalBpm;
-        this.tracks.forEach(track => {
-            if (track.stretcher) {
-                track.stretcher.tempo = tempoRatio;
-            }
-        });
-        // Reinicia o metrônomo para aplicar o novo BPM imediatamente
-        if (this.isPlaying && this.metronomeEnabled) {
-            this._stopMetronome();
-            this._startMetronome();
-        }
-    }
-
-    setKey(newKey) {
-        const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-        const originalIndex = notes.indexOf(this.originalKey.replace('m', '')); // Remove 'm' para encontrar a nota base
-        const newIndex = notes.indexOf(newKey.replace('m', ''));
-
-        if (originalIndex === -1 || newIndex === -1) {
-            console.warn(`Tom original ou novo inválido: ${this.originalKey}, ${newKey}`);
-            return;
-        }
-
-        this.pitchSemitones = newIndex - originalIndex;
-        
-        this.tracks.forEach(track => {
-            if (track.stretcher) {
-                // SoundTouchJS usa pitch como um multiplicador de frequência
-                // 2^(semitons / 12) é a fórmula para pitch shifting
-                track.stretcher.pitch = Math.pow(2, this.pitchSemitones / 12);
-            }
-        });
-    }
-
-    // Função para ser chamada ao carregar uma nova música
-    setCurrentSongMetadata(bpm, key) {
-        this.originalBpm = bpm;
-        this.currentBpm = bpm;
-        this.originalKey = key;
-        this.currentKey = key;
-        this.pitchSemitones = 0;
-
-        // Aplica o BPM e Tom iniciais
-        this.setBpm(bpm);
-        this.setKey(key);
     }
 }

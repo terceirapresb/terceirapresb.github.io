@@ -3,65 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multitrack Player</title>
-    <script type="module" src="lib/soundtouch.min.js"></script>
+    <title>Player Multitrack</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="player-container" id="player-container">
-        <div class="fixed-header" id="fixed-header">
-            <div class="header-top-row">
-                <h1 id="player-title">Player Multitrack</h1>
-                <div class="controls-main">
-                    <button id="play-btn" aria-label="Play">Play</button>
-                    <button id="pause-btn" aria-label="Pause">Pause</button>
-                    <button id="stop-btn" aria-label="Stop">Stop</button>
-                    <button id="reset-btn" aria-label="Resetar Mix">Resetar Mix</button>
-                </div>
+<div class="player-container" id="player-container">
+    <div class="fixed-header" id="fixed-header">
+        <div class="header-top-row">
+            <h1 id="player-title">Player Multitrack</h1>
+            <div class="controls-main">
+                <button id="play-btn" aria-label="Play">Play</button>
+                <button id="pause-btn" aria-label="Pause">Pause</button>
+                <button id="stop-btn" aria-label="Stop">Stop</button>
+                <button id="reset-btn" aria-label="Resetar Mix">Resetar Mix</button>
             </div>
-            <span class="version-info">v1.1.4</span>
-            <div class="song-selector" id="song-selector-container">
-                <label for="song-select">Escolha a Música:</label>
-                <select id="song-select"></select>
-            </div>
-            <div class="timeline">
-                <div class="progress-container">
+        </div>
+        <span class="version-info">v1.1.4</span>
+        <div class="song-selector" id="song-selector-container">
+            <label for="song-select">Escolha a Música:</label>
+            <select id="song-select"></select>
+        </div>
+        <div class="timeline">
             <span id="time-current">0:00</span>
-            <input type="range" id="progress-bar" class="progress-bar" value="0" step="1" disabled>
+            <input type="range" id="progress-bar" value="0" step="0.1" disabled role="slider" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
             <span id="time-duration">0:00</span>
         </div>
-
-        <div id="practice-controls" class="practice-controls-container" style="display: none;">
-            <div class="control-group">
-                <label for="bpm-slider">BPM: <span id="bpm-value">120</span></label>
-                <input type="range" id="bpm-slider" class="bpm-slider" min="50" max="200" value="120">
-            </div>
-            <div class="control-group">
-                <label for="key-selector">Tom:</label>
-                <select id="key-selector"></select>
-            </div>
-            <div class="control-group">
-                <label for="metronome-toggle">Metrônomo:</label>
-                <button id="metronome-toggle" class="control-button">Off</button>
-                <input type="range" id="metronome-volume" class="volume-slider" min="0" max="1" step="0.01" value="0.5">
-            </div>
-        </div>
-            </div>
-        </div>
-
-        <div class="scrollable-content">
-            <div id="loading-status" aria-live="polite">
-                <p>Pronto para carregar.</p>
-            </div>
-            <button id="retry-btn" style="display: none;">Tentar Novamente</button>
-            <div id="tracks-container">
-                <!-- Controles de faixa individuais serão inseridos aqui -->
-            </div>
-        </div>
-        
     </div>
 
-    <script type="module" src="main.js" id="multitrack-player-script"></script>
+    <div class="scrollable-content">
+        <div id="loading-status" aria-live="polite">
+            <p>Pronto para carregar.</p>
+        </div>
+        <button id="retry-btn" style="display: none;">Tentar Novamente</button>
+        <div id="tracks-container">
+            <!-- Controles de faixa individuais serão inseridos aqui -->
+        </div>
+    </div>
+
+</div>
+
+<script type="module" src="main.js" id="multitrack-player-script"></script>
 </body>
 </html>
