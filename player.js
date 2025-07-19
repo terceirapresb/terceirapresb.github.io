@@ -15,6 +15,9 @@ export default class WebAudioMultiTrackPlayer {
         this.onLoadProgress = () => {};
         this.isUnlocked = false;
 
+        this.masterGainNode = this.audioContext.createGain();
+        this.masterGainNode.connect(this.audioContext.destination);
+
         if ('audioSession' in navigator) {
             navigator.audioSession.type = 'playback';
             console.log('Audio Session API configurada para playback');
@@ -161,7 +164,7 @@ export default class WebAudioMultiTrackPlayer {
             this.tracks.sort((a, b) => trackList.findIndex(t => t.name === a.name) - trackList.findIndex(t => t.name === b.name));
             this.tracks.forEach(track => {
                 track.analyser.connect(track.gainNode);
-                track.gainNode.connect(this.audioContext.destination);
+                track.gainNode.connect(this.masterGainNode); // Conecta ao ganho mestre
             });
             this.onStateChange({ isLoading: false, duration: this.getDuration() });
         } catch (error) {
@@ -361,5 +364,27 @@ export default class WebAudioMultiTrackPlayer {
             cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
         }
+    }
+
+    setMasterVolume(volume) {
+        const gainValue = this.linearToLogarithmicGain(volume);
+        this.masterGainNode.gain.setTargetAtTime(gainValue, this.audioContext.currentTime, 0.01);
+    }
+
+    resetMix() {
+        this.tracks.forEach(track => {
+            track.volume = 1;
+            track.isMuted = false;
+            track.isSoloed = false;
+        });
+        this._updateGains();
+        this.setMasterVolume(1);
+
+        return this.tracks.map(t => ({ 
+            name: t.name, 
+            volume: t.volume, 
+            isMuted: t.isMuted, 
+            isSoloed: t.isSoloed 
+        }));
     }
 }
