@@ -1,4 +1,3 @@
-
 // Detecta se é um iPhone/iPad
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -514,3 +513,4 @@ export default class WebAudioMultiTrackPlayer {
         this.setBpm(bpm);
         this.setKey(key);
     }
+}
