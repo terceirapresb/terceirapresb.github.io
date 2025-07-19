@@ -90,10 +90,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         ui.loadingStatus.style.color = 'var(--light-text-color)';
 
         try {
-            await player.load(songs[songName]);
+            player.setCurrentSongMetadata(songs[songName].bpm, songs[songName].tom);
+            await player.load(songs[songName].tracks);
             ui.loadingStatus.innerHTML = `✅ Música "${songName}" carregada com sucesso!`;
             renderTrackControls(player, ui.tracksContainer);
             updateButtons(ui, player, false, false);
+            updatePracticeControlsUI(ui, player); // Atualiza os controles de prática
 
         } catch (error) {
             ui.loadingStatus.textContent = `Erro ao carregar a música: ${error.message}.`;

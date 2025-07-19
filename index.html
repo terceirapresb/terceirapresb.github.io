@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Multitrack</title>
+    <title>Multitrack Player</title>
+    <script src="lib/soundtouch.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,9 +26,27 @@
                 <select id="song-select"></select>
             </div>
             <div class="timeline">
-                <span id="time-current">0:00</span>
-                <input type="range" id="progress-bar" value="0" step="0.1" disabled role="slider" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0">
-                <span id="time-duration">0:00</span>
+                <div class="progress-container">
+            <span id="time-current">0:00</span>
+            <input type="range" id="progress-bar" class="progress-bar" value="0" step="1" disabled>
+            <span id="time-duration">0:00</span>
+        </div>
+
+        <div id="practice-controls" class="practice-controls-container" style="display: none;">
+            <div class="control-group">
+                <label for="bpm-slider">BPM: <span id="bpm-value">120</span></label>
+                <input type="range" id="bpm-slider" class="bpm-slider" min="50" max="200" value="120">
+            </div>
+            <div class="control-group">
+                <label for="key-selector">Tom:</label>
+                <select id="key-selector"></select>
+            </div>
+            <div class="control-group">
+                <label for="metronome-toggle">Metrônomo:</label>
+                <button id="metronome-toggle" class="control-button">Off</button>
+                <input type="range" id="metronome-volume" class="volume-slider" min="0" max="1" step="0.01" value="0.5">
+            </div>
+        </div>
             </div>
         </div>
 

@@ -1,106 +1,50 @@
 {
-    "Clamo Jesus": [
-        {
-            "name": "Bass",
-            "path": "audio/Clamo Jesus/Bass.mp3"
-        },
-        {
-            "name": "Drums",
-            "path": "audio/Clamo Jesus/Drums.mp3"
-        },
-        {
-            "name": "Guitar",
-            "path": "audio/Clamo Jesus/Guitar.mp3"
-        },
-        {
-            "name": "Other",
-            "path": "audio/Clamo Jesus/Other.mp3"
-        },
-        {
-            "name": "Piano",
-            "path": "audio/Clamo Jesus/Piano.mp3"
-        },
-        {
-            "name": "Vocals",
-            "path": "audio/Clamo Jesus/Vocals.mp3"
-        }
-    ],
-    "Eu e minha casa": [
-        {
-            "name": "Bass",
-            "path": "audio/Eu e minha casa/Bass.mp3"
-        },
-        {
-            "name": "Drums",
-            "path": "audio/Eu e minha casa/Drums.mp3"
-        },
-        {
-            "name": "Guitar",
-            "path": "audio/Eu e minha casa/Guitar.mp3"
-        },
-        {
-            "name": "Other",
-            "path": "audio/Eu e minha casa/Other.mp3"
-        },
-        {
-            "name": "Piano",
-            "path": "audio/Eu e minha casa/Piano.mp3"
-        },
-        {
-            "name": "Vocals",
-            "path": "audio/Eu e minha casa/Vocals.mp3"
-        }
-    ],
-    "Galileu": [
-        {
-            "name": "Bass",
-            "path": "audio/Galileu/Bass.mp3"
-        },
-        {
-            "name": "Drums",
-            "path": "audio/Galileu/Drums.mp3"
-        },
-        {
-            "name": "Guitar",
-            "path": "audio/Galileu/Guitar.mp3"
-        },
-        {
-            "name": "Other",
-            "path": "audio/Galileu/Other.mp3"
-        },
-        {
-            "name": "Piano",
-            "path": "audio/Galileu/Piano.mp3"
-        },
-        {
-            "name": "Vocals",
-            "path": "audio/Galileu/Vocals.mp3"
-        }
-    ],
-    "O senhor dos exercitos": [
-        {
-            "name": "Bass",
-            "path": "audio/O senhor dos exercitos/Bass.mp3"
-        },
-        {
-            "name": "Drums",
-            "path": "audio/O senhor dos exercitos/Drums.mp3"
-        },
-        {
-            "name": "Guitar",
-            "path": "audio/O senhor dos exercitos/Guitar.mp3"
-        },
-        {
-            "name": "Other",
-            "path": "audio/O senhor dos exercitos/Other.mp3"
-        },
-        {
-            "name": "Piano",
-            "path": "audio/O senhor dos exercitos/Piano.mp3"
-        },
-        {
-            "name": "Vocals",
-            "path": "audio/O senhor dos exercitos/Vocals.mp3"
-        }
+  "Clamo Jesus": {
+    "bpm": 74,
+    "tom": "E",
+    "tracks": [
+      { "name": "Bass", "path": "audio/Clamo Jesus/Bass.mp3" },
+      { "name": "Drums", "path": "audio/Clamo Jesus/Drums.mp3" },
+      { "name": "Guitar", "path": "audio/Clamo Jesus/Guitar.mp3" },
+      { "name": "Other", "path": "audio/Clamo Jesus/Other.mp3" },
+      { "name": "Piano", "path": "audio/Clamo Jesus/Piano.mp3" },
+      { "name": "Vocals", "path": "audio/Clamo Jesus/Vocals.mp3" }
     ]
+  },
+  "Eu e minha casa": {
+    "bpm": 75,
+    "tom": "G",
+    "tracks": [
+      { "name": "Bass", "path": "audio/Eu e minha casa/Bass.mp3" },
+      { "name": "Drums", "path": "audio/Eu e minha casa/Drums.mp3" },
+      { "name": "Guitar", "path": "audio/Eu e minha casa/Guitar.mp3" },
+      { "name": "Other", "path": "audio/Eu e minha casa/Other.mp3" },
+      { "name": "Piano", "path": "audio/Eu e minha casa/Piano.mp3" },
+      { "name": "Vocals", "path": "audio/Eu e minha casa/Vocals.mp3" }
+    ]
+  },
+  "Galileu": {
+    "bpm": 116,
+    "tom": "Am",
+    "tracks": [
+      { "name": "Bass", "path": "audio/Galileu/Bass.mp3" },
+      { "name": "Drums", "path": "audio/Galileu/Drums.mp3" },
+      { "name": "Guitar", "path": "audio/Galileu/Guitar.mp3" },
+      { "name": "Other", "path": "audio/Galileu/Other.mp3" },
+      { "name": "Piano", "path": "audio/Galileu/Piano.mp3" },
+      { "name": "Vocals", "path": "audio/Galileu/Vocals.mp3" }
+    ]
+  },
+  "O senhor dos exercitos": {
+    "bpm": 74,
+    "tom": "Dm",
+    "tracks": [
+      { "name": "Bass", "path": "audio/O senhor dos exercitos/Bass.mp3" },
+      { "name": "Drums", "path": "audio/O senhor dos exercitos/Drums.mp3" },
+      { "name": "Guitar", "path": "audio/O senhor dos exercitos/Guitar.mp3" },
+      { "name": "Other", "path": "audio/O senhor dos exercitos/Other.mp3" },
+      { "name": "Piano", "path": "audio/O senhor dos exercitos/Piano.mp3" },
+      { "name": "Vocals", "path": "audio/O senhor dos exercitos/Vocals.mp3" }
+    ]
+  }
 }
