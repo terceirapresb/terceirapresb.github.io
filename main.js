@@ -76,6 +76,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Implementação robusta de desbloqueio para iOS
             this.setupIOSUnlock();
 
+            // Detecta quando o app volta do background no iOS
+            if (isIOS) {
+                document.addEventListener('visibilitychange', () => {
+                    if (!document.hidden && this.audioContext.state === 'suspended') {
+                        console.log('App voltou do background, AudioContext suspenso');
+                        this.isUnlocked = false;
+                        isAudioUnlocked = false;
+                    }
+                });
+            }
+
             console.log('AudioContext initial state:', this.audioContext.state);
         }
 
@@ -140,12 +151,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             const totalCount = trackList.length;
             let downloadProgress = new Array(totalCount).fill(0);
             let decodedTracks = 0;
+            let currentLoadingTrack = '';
+            let loadingPhase = 'preparando';
+            let completedTracks = [];
 
             const updateOverallProgress = () => {
                 const downloadPart = (downloadProgress.reduce((a, b) => a + b, 0) / totalCount) * DOWNLOAD_WEIGHT;
                 const decodePart = (decodedTracks / totalCount) * DECODE_WEIGHT;
                 const percentage = Math.round((downloadPart + decodePart) * 100);
-                this.onLoadProgress({ percentage });
+                this.onLoadProgress({ 
+                    percentage, 
+                    currentTrack: currentLoadingTrack,
+                    phase: loadingPhase,
+                    totalTracks: totalCount,
+                    completedTracks: completedTracks.length,
+                    downloadedTracks: downloadProgress.filter(p => p === 1).length,
+                    decodedTracks: decodedTracks
+                });
             };
 
             const loadPromises = trackList.map((trackInfo, index) =>
@@ -157,12 +179,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     request.onprogress = (event) => {
                         if (event.lengthComputable) {
                             downloadProgress[index] = event.loaded / event.total;
+                            currentLoadingTrack = trackInfo.name;
+                            loadingPhase = 'baixando';
                             updateOverallProgress();
                         }
                     };
 
                     request.onload = () => {
                         downloadProgress[index] = 1; // Ensure download is marked as 100%
+                        currentLoadingTrack = trackInfo.name;
+                        loadingPhase = 'decodificando';
                         updateOverallProgress();
 
                         // Usa a versão com callback para melhor compatibilidade com Safari
@@ -182,6 +208,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 uiElements: {} // Para armazenar referências aos elementos da UI
                             });
                             decodedTracks++;
+                            completedTracks.push(trackInfo.name);
                             updateOverallProgress();
                             resolve();
                         }, (error) => {
@@ -452,6 +479,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (player.isUnlocked) {
                 unlockButton.remove();
                 unlockButton = null;
+                
+                // Se havia uma música pendente, tenta carregar novamente
+                if (currentSongName) {
+                    loadSong(currentSongName);
+                }
             } else {
                 btnElement.textContent = 'Tentar Novamente';
                 btnElement.disabled = false;
@@ -564,22 +596,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             ui.loadingStatus.style.color = 'red';
             ui.retryBtn.style.display = 'block'; // Mostra o botão de tentar novamente
             updateButtons(false, false, true); // Desabilita botões de play/pause/stop
-            alert(`Ocorreu um erro: ${state.error}`);
+            alert(`Ocorreu um erro: música não encontrada`);
             return;
+        }
+        
+        // Verifica se o AudioContext foi suspenso (comum ao voltar de outro app no iOS)
+        if (isIOS && player.audioContext.state === 'suspended') {
+            console.log('AudioContext foi suspenso. Tentando reativar...');
+            player.isUnlocked = false;
+            isAudioUnlocked = false;
+            
+            // Tenta desbloquear automaticamente
+            await player.forceUnlock();
+            
+            // Se não conseguir, mostra o botão novamente
+            if (!player.isUnlocked && !unlockButton) {
+                createIOSUnlockButton();
+                return; // Interrompe o carregamento até o usuário desbloquear
+            }
         }
         
         ui.title.textContent = songName;
         updateButtons(false, true); // Desabilita botões de play/pause/stop durante o carregamento
         ui.retryBtn.style.display = 'none'; // Esconde o botão de tentar novamente
         ui.tracksContainer.innerHTML = '';
-        ui.loadingStatus.textContent = `Carregando ${songName}... (0%)`;
+        ui.loadingStatus.innerHTML = `🎵 ${songName} - Iniciando carregamento...`;
         ui.loadingStatus.style.color = 'var(--light-text-color)'; // Reseta a cor
 
         try {
             await player.load(songs[songName]);
-            ui.loadingStatus.textContent = `Música "${songName}" carregada.`;
+            ui.loadingStatus.innerHTML = `✅ Música "${songName}" carregada com sucesso!`;
             renderTrackControls();
             updateButtons(false, false); // Reabilita botões após carregamento
+
         } catch (error) {
             ui.loadingStatus.textContent = `Erro ao carregar a música: ${error.message}.`;
             ui.loadingStatus.style.color = 'red';
@@ -777,10 +826,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    player.onLoadProgress = ({ percentage }) => {
+    player.onLoadProgress = (progress) => {
         const songName = ui.songSelect.value || ui.title.textContent;
-        ui.loadingStatus.textContent = `Carregando ${songName}... (${percentage}%)`;
-        ui.loadingStatus.style.color = 'var(--light-text-color)'; // Reseta a cor
+        let statusText = `🎵 ${songName}`;
+        
+        if (progress.phase === 'preparando') {
+            statusText += ` - Preparando...`;
+        } else if (progress.phase === 'baixando') {
+            statusText += ` - Baixando: ${progress.currentTrack}`;
+            statusText += ` (${progress.downloadedTracks}/${progress.totalTracks} faixas)`;
+        } else if (progress.phase === 'decodificando') {
+            statusText += ` - Processando: ${progress.currentTrack}`;
+            statusText += ` (${progress.decodedTracks}/${progress.totalTracks} faixas)`;
+        }
+        
+        statusText += ` - ${progress.percentage}%`;
+        
+        // Adiciona uma barra de progresso visual
+        const progressBar = `<div style="
+            width: 100%;
+            height: 4px;
+            background-color: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        ">
+            <div style="
+                width: ${progress.percentage}%;
+                height: 100%;
+                background-color: #007aff;
+                transition: width 0.3s ease;
+            "></div>
+        </div>`;
+        
+        ui.loadingStatus.innerHTML = statusText + progressBar;
+        ui.loadingStatus.style.color = 'var(--light-text-color)';
     };
 
     // Função para atualizar o visual dos controles de faixa (mute/solo)
