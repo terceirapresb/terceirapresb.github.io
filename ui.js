@@ -21,8 +21,6 @@ export function getUIElements() {
         scriptTag: document.getElementById('multitrack-player-script'),
         fixedHeader: document.getElementById('fixed-header'),
         retryBtn: document.getElementById('retry-btn'),
-        masterVolumeSlider: document.getElementById('master-volume'),
-        masterVolumePercentage: document.getElementById('master-volume-percentage'),
         resetBtn: document.getElementById('reset-btn')
     };
 }
@@ -246,19 +244,9 @@ export function setupEventListeners(ui, player, loadSongCallback) {
 
     ui.progressBar.setAttribute('aria-valuetext', `0 minutos e 0 segundos de ${formatTime(player.getDuration())}`);
 
-    ui.masterVolumeSlider.addEventListener('input', (e) => {
-        const volume = parseFloat(e.target.value);
-        player.setMasterVolume(volume);
-        const percentage = Math.round(volume * 100);
-        ui.masterVolumePercentage.textContent = `${percentage}%`;
-    });
-
     ui.resetBtn.addEventListener('click', () => {
-        const updatedTracks = player.resetMix();
+        player.resetMix();
         
-        ui.masterVolumeSlider.value = 1;
-        ui.masterVolumePercentage.textContent = '100%';
-
         player.tracks.forEach(track => {
             if (track.uiElements.volumeSlider) {
                 track.uiElements.volumeSlider.value = track.volume;

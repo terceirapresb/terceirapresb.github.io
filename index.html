@@ -16,6 +16,7 @@
                     <button id="play-btn" aria-label="Play">Play</button>
                     <button id="pause-btn" aria-label="Pause">Pause</button>
                     <button id="stop-btn" aria-label="Stop">Stop</button>
+                    <button id="reset-btn" aria-label="Resetar Mix">Resetar Mix</button>
                 </div>
             </div>
             <span class="version-info">v1.1.4</span>
@@ -24,19 +25,10 @@
                 <select id="song-select"></select>
             </div>
             <div class="timeline">
-                <div class="progress-container">
+        <div class="progress-container">
             <span id="time-current">0:00</span>
             <input type="range" id="progress-bar" class="progress-bar" value="0" step="1" disabled>
             <span id="time-duration">0:00</span>
-        </div>
-
-        <div class="master-controls-container">
-            <div class="volume-control">
-                <span class="label">Volume Master:</span>
-                <input type="range" id="master-volume" class="volume-slider" min="0" max="1.5" step="0.01" value="1" aria-label="Volume Master">
-                <span id="master-volume-percentage" class="volume-percentage">100%</span>
-            </div>
-            <button id="reset-btn" class="control-button">Resetar Mix</button>
         </div>
             </div>
         </div>
