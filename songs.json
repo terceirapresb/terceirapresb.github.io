@@ -1,106 +1,106 @@
 {
-  "Clamo Jesus": [
-    {
-      "name": "Bass",
-      "path": "audio/Clamo Jesus/Bass.mp3"
-    },
-    {
-      "name": "Drums",
-      "path": "audio/Clamo Jesus/Drums.mp3"
-    },
-    {
-      "name": "Guitar",
-      "path": "audio/Clamo Jesus/Guitar.mp3"
-    },
-    {
-      "name": "Other",
-      "path": "audio/Clamo Jesus/Other.mp3"
-    },
-    {
-      "name": "Piano",
-      "path": "audio/Clamo Jesus/Piano.mp3"
-    },
-    {
-      "name": "Vocals",
-      "path": "audio/Clamo Jesus/Vocals.mp3"
-    }
-  ],
-  "Eu e minha casa": [
-    {
-      "name": "Bass",
-      "path": "audio/Eu e minha casa/Bass.mp3"
-    },
-    {
-      "name": "Drums",
-      "path": "audio/Eu e minha casa/Drums.mp3"
-    },
-    {
-      "name": "Guitar",
-      "path": "audio/Eu e minha casa/Guitar.mp3"
-    },
-    {
-      "name": "Other",
-      "path": "audio/Eu e minha casa/Other.mp3"
-    },
-    {
-      "name": "Piano",
-      "path": "audio/Eu e minha casa/Piano.mp3"
-    },
-    {
-      "name": "Vocals",
-      "path": "audio/Eu e minha casa/Vocals.mp3"
-    }
-  ],
-  "Galileu": [
-    {
-      "name": "Bass",
-      "path": "audio/Galileu/Bass.mp3"
-    },
-    {
-      "name": "Drums",
-      "path": "audio/Galileu/Drums.mp3"
-    },
-    {
-      "name": "Guitar",
-      "path": "audio/Galileu/Guitar.mp3"
-    },
-    {
-      "name": "Other",
-      "path": "audio/Galileu/Other.mp3"
-    },
-    {
-      "name": "Piano",
-      "path": "audio/Galileu/Piano.mp3"
-    },
-    {
-      "name": "Vocals",
-      "path": "audio/Galileu/Vocals.mp3"
-    }
-  ],
-  "O senhor dos exercitos": [
-    {
-      "name": "Bass",
-      "path": "audio/O senhor dos exercitos/Bass.mp3"
-    },
-    {
-      "name": "Drums",
-      "path": "audio/O senhor dos exercitos/Drums.mp3"
-    },
-    {
-      "name": "Guitar",
-      "path": "audio/O senhor dos exercitos/Guitar.mp3"
-    },
-    {
-      "name": "Other",
-      "path": "audio/O senhor dos exercitos/Other.mp3"
-    },
-    {
-      "name": "Piano",
-      "path": "audio/O senhor dos exercitos/Piano.mp3"
-    },
-    {
-      "name": "Vocals",
-      "path": "audio/O senhor dos exercitos/Vocals.mp3"
-    }
-  ]
+    "Estamos de Pé": [
+        {
+            "name": "Bass",
+            "path": "audio/Estamos de Pé/Bass.mp3"
+        },
+        {
+            "name": "Drums",
+            "path": "audio/Estamos de Pé/Drums.mp3"
+        },
+        {
+            "name": "Guitar",
+            "path": "audio/Estamos de Pé/Guitar.mp3"
+        },
+        {
+            "name": "Other",
+            "path": "audio/Estamos de Pé/Other.mp3"
+        },
+        {
+            "name": "Piano",
+            "path": "audio/Estamos de Pé/Piano.mp3"
+        },
+        {
+            "name": "Vocals",
+            "path": "audio/Estamos de Pé/Vocals.mp3"
+        }
+    ],
+    "Eu vejo a glória": [
+        {
+            "name": "Bass",
+            "path": "audio/Eu vejo a glória/Bass.mp3"
+        },
+        {
+            "name": "Drums",
+            "path": "audio/Eu vejo a glória/Drums.mp3"
+        },
+        {
+            "name": "Guitar",
+            "path": "audio/Eu vejo a glória/Guitar.mp3"
+        },
+        {
+            "name": "Other",
+            "path": "audio/Eu vejo a glória/Other.mp3"
+        },
+        {
+            "name": "Piano",
+            "path": "audio/Eu vejo a glória/Piano.mp3"
+        },
+        {
+            "name": "Vocals",
+            "path": "audio/Eu vejo a glória/Vocals.mp3"
+        }
+    ],
+    "Nosso General": [
+        {
+            "name": "Bass",
+            "path": "audio/Nosso General/Bass.mp3"
+        },
+        {
+            "name": "Drums",
+            "path": "audio/Nosso General/Drums.mp3"
+        },
+        {
+            "name": "Guitar",
+            "path": "audio/Nosso General/Guitar.mp3"
+        },
+        {
+            "name": "Other",
+            "path": "audio/Nosso General/Other.mp3"
+        },
+        {
+            "name": "Piano",
+            "path": "audio/Nosso General/Piano.mp3"
+        },
+        {
+            "name": "Vocals",
+            "path": "audio/Nosso General/Vocals.mp3"
+        }
+    ],
+    "Sublime": [
+        {
+            "name": "Bass",
+            "path": "audio/Sublime/Bass.mp3"
+        },
+        {
+            "name": "Drums",
+            "path": "audio/Sublime/Drums.mp3"
+        },
+        {
+            "name": "Guitar",
+            "path": "audio/Sublime/Guitar.mp3"
+        },
+        {
+            "name": "Other",
+            "path": "audio/Sublime/Other.mp3"
+        },
+        {
+            "name": "Piano",
+            "path": "audio/Sublime/Piano.mp3"
+        },
+        {
+            "name": "Vocals",
+            "path": "audio/Sublime/Vocals.mp3"
+        }
+    ]
 }
