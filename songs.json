@@ -1,106 +1,106 @@
 {
-    "Estamos de Pé": [
+    "Até Que Ele Venha": [
         {
             "name": "Bass",
-            "path": "audio/Estamos de Pé/Bass.mp3"
+            "path": "audio/Até Que Ele Venha/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Estamos de Pé/Drums.mp3"
+            "path": "audio/Até Que Ele Venha/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Estamos de Pé/Guitar.mp3"
+            "path": "audio/Até Que Ele Venha/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Estamos de Pé/Other.mp3"
+            "path": "audio/Até Que Ele Venha/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Estamos de Pé/Piano.mp3"
+            "path": "audio/Até Que Ele Venha/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Estamos de Pé/Vocals.mp3"
+            "path": "audio/Até Que Ele Venha/Vocals.mp3"
         }
     ],
-    "Eu vejo a glória": [
+    "Cantarei Teu Amor": [
         {
             "name": "Bass",
-            "path": "audio/Eu vejo a glória/Bass.mp3"
+            "path": "audio/Cantarei Teu Amor/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Eu vejo a glória/Drums.mp3"
+            "path": "audio/Cantarei Teu Amor/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Eu vejo a glória/Guitar.mp3"
+            "path": "audio/Cantarei Teu Amor/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Eu vejo a glória/Other.mp3"
+            "path": "audio/Cantarei Teu Amor/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Eu vejo a glória/Piano.mp3"
+            "path": "audio/Cantarei Teu Amor/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Eu vejo a glória/Vocals.mp3"
+            "path": "audio/Cantarei Teu Amor/Vocals.mp3"
         }
     ],
-    "Nosso General": [
+    "Eterno Deus": [
         {
             "name": "Bass",
-            "path": "audio/Nosso General/Bass.mp3"
+            "path": "audio/Eterno Deus/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Nosso General/Drums.mp3"
+            "path": "audio/Eterno Deus/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Nosso General/Guitar.mp3"
+            "path": "audio/Eterno Deus/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Nosso General/Other.mp3"
+            "path": "audio/Eterno Deus/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Nosso General/Piano.mp3"
+            "path": "audio/Eterno Deus/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Nosso General/Vocals.mp3"
+            "path": "audio/Eterno Deus/Vocals.mp3"
         }
     ],
-    "Sublime": [
+    "Isaías 53": [
         {
             "name": "Bass",
-            "path": "audio/Sublime/Bass.mp3"
+            "path": "audio/Isaías 53/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Sublime/Drums.mp3"
+            "path": "audio/Isaías 53/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Sublime/Guitar.mp3"
+            "path": "audio/Isaías 53/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Sublime/Other.mp3"
+            "path": "audio/Isaías 53/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Sublime/Piano.mp3"
+            "path": "audio/Isaías 53/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Sublime/Vocals.mp3"
+            "path": "audio/Isaías 53/Vocals.mp3"
         }
     ]
 }
