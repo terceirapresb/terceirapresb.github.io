@@ -77,30 +77,30 @@
             "path": "audio/Obrigado Jesus Pelo Seu Sangue/Vocals.mp3"
         }
     ],
-    "Tu és": [
+    "Tu es": [
         {
             "name": "Bass",
-            "path": "audio/Tu és/Bass.mp3"
+            "path": "audio/Tu es/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Tu és/Drums.mp3"
+            "path": "audio/Tu es/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Tu és/Guitar.mp3"
+            "path": "audio/Tu es/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Tu és/Other.mp3"
+            "path": "audio/Tu es/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Tu és/Piano.mp3"
+            "path": "audio/Tu es/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Tu és/Vocals.mp3"
+            "path": "audio/Tu es/Vocals.mp3"
         }
     ]
 }
