@@ -1,106 +1,106 @@
 {
-    "Até Que Ele Venha": [
+    "A Tua Glória": [
         {
             "name": "Bass",
-            "path": "audio/Até Que Ele Venha/Bass.mp3"
+            "path": "audio/A Tua Glória/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Até Que Ele Venha/Drums.mp3"
+            "path": "audio/A Tua Glória/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Até Que Ele Venha/Guitar.mp3"
+            "path": "audio/A Tua Glória/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Até Que Ele Venha/Other.mp3"
+            "path": "audio/A Tua Glória/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Até Que Ele Venha/Piano.mp3"
+            "path": "audio/A Tua Glória/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Até Que Ele Venha/Vocals.mp3"
+            "path": "audio/A Tua Glória/Vocals.mp3"
         }
     ],
-    "Cantarei Teu Amor": [
+    "Nosso General": [
         {
             "name": "Bass",
-            "path": "audio/Cantarei Teu Amor/Bass.mp3"
+            "path": "audio/Nosso General/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Cantarei Teu Amor/Drums.mp3"
+            "path": "audio/Nosso General/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Cantarei Teu Amor/Guitar.mp3"
+            "path": "audio/Nosso General/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Cantarei Teu Amor/Other.mp3"
+            "path": "audio/Nosso General/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Cantarei Teu Amor/Piano.mp3"
+            "path": "audio/Nosso General/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Cantarei Teu Amor/Vocals.mp3"
+            "path": "audio/Nosso General/Vocals.mp3"
         }
     ],
-    "Eterno Deus": [
+    "Obrigado Jesus Pelo Seu Sangue": [
         {
             "name": "Bass",
-            "path": "audio/Eterno Deus/Bass.mp3"
+            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Eterno Deus/Drums.mp3"
+            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Eterno Deus/Guitar.mp3"
+            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Eterno Deus/Other.mp3"
+            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Eterno Deus/Piano.mp3"
+            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Eterno Deus/Vocals.mp3"
+            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Vocals.mp3"
         }
     ],
-    "Isaías 53": [
+    "Tu és + Águas purificadoras": [
         {
             "name": "Bass",
-            "path": "audio/Isaías 53/Bass.mp3"
+            "path": "audio/Tu és + Águas purificadoras/Bass.mp3"
         },
         {
             "name": "Drums",
-            "path": "audio/Isaías 53/Drums.mp3"
+            "path": "audio/Tu és + Águas purificadoras/Drums.mp3"
         },
         {
             "name": "Guitar",
-            "path": "audio/Isaías 53/Guitar.mp3"
+            "path": "audio/Tu és + Águas purificadoras/Guitar.mp3"
         },
         {
             "name": "Other",
-            "path": "audio/Isaías 53/Other.mp3"
+            "path": "audio/Tu és + Águas purificadoras/Other.mp3"
         },
         {
             "name": "Piano",
-            "path": "audio/Isaías 53/Piano.mp3"
+            "path": "audio/Tu és + Águas purificadoras/Piano.mp3"
         },
         {
             "name": "Vocals",
-            "path": "audio/Isaías 53/Vocals.mp3"
+            "path": "audio/Tu és + Águas purificadoras/Vocals.mp3"
         }
     ]
 }
