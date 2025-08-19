@@ -1,106 +1,154 @@
 {
-    "A Tua Glória": [
+    "Coração Igual ao Teu": [
         {
-            "name": "Bass",
-            "path": "audio/A Tua Glória/Bass.mp3"
+            "name": "acoustic",
+            "path": "audio/Coração Igual ao Teu/acoustic.mp3"
         },
         {
-            "name": "Drums",
-            "path": "audio/A Tua Glória/Drums.mp3"
+            "name": "backing_vocals",
+            "path": "audio/Coração Igual ao Teu/backing_vocals.mp3"
         },
         {
-            "name": "Guitar",
-            "path": "audio/A Tua Glória/Guitar.mp3"
+            "name": "bass",
+            "path": "audio/Coração Igual ao Teu/bass.mp3"
         },
         {
-            "name": "Other",
-            "path": "audio/A Tua Glória/Other.mp3"
+            "name": "drums",
+            "path": "audio/Coração Igual ao Teu/drums.mp3"
         },
         {
-            "name": "Piano",
-            "path": "audio/A Tua Glória/Piano.mp3"
+            "name": "electric",
+            "path": "audio/Coração Igual ao Teu/electric.mp3"
         },
         {
-            "name": "Vocals",
-            "path": "audio/A Tua Glória/Vocals.mp3"
+            "name": "keys",
+            "path": "audio/Coração Igual ao Teu/keys.mp3"
+        },
+        {
+            "name": "metronome",
+            "path": "audio/Coração Igual ao Teu/metronome.mp3"
+        },
+        {
+            "name": "other",
+            "path": "audio/Coração Igual ao Teu/other.mp3"
+        },
+        {
+            "name": "vocals",
+            "path": "audio/Coração Igual ao Teu/vocals.mp3"
         }
     ],
-    "Nosso General": [
+    "Galileu": [
         {
-            "name": "Bass",
-            "path": "audio/Nosso General/Bass.mp3"
+            "name": "acoustic",
+            "path": "audio/Galileu/acoustic.mp3"
         },
         {
-            "name": "Drums",
-            "path": "audio/Nosso General/Drums.mp3"
+            "name": "backing_vocals",
+            "path": "audio/Galileu/backing_vocals.mp3"
         },
         {
-            "name": "Guitar",
-            "path": "audio/Nosso General/Guitar.mp3"
+            "name": "bass",
+            "path": "audio/Galileu/bass.mp3"
         },
         {
-            "name": "Other",
-            "path": "audio/Nosso General/Other.mp3"
+            "name": "drums",
+            "path": "audio/Galileu/drums.mp3"
         },
         {
-            "name": "Piano",
-            "path": "audio/Nosso General/Piano.mp3"
+            "name": "electric",
+            "path": "audio/Galileu/electric.mp3"
         },
         {
-            "name": "Vocals",
-            "path": "audio/Nosso General/Vocals.mp3"
+            "name": "keys",
+            "path": "audio/Galileu/keys.mp3"
+        },
+        {
+            "name": "metronome",
+            "path": "audio/Galileu/metronome.mp3"
+        },
+        {
+            "name": "other",
+            "path": "audio/Galileu/other.mp3"
+        },
+        {
+            "name": "vocals",
+            "path": "audio/Galileu/vocals.mp3"
         }
     ],
-    "Obrigado Jesus Pelo Seu Sangue": [
+    "Leão de Judá": [
         {
-            "name": "Bass",
-            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Bass.mp3"
+            "name": "acoustic",
+            "path": "audio/Leão de Judá/acoustic.mp3"
         },
         {
-            "name": "Drums",
-            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Drums.mp3"
+            "name": "backing_vocals",
+            "path": "audio/Leão de Judá/backing_vocals.mp3"
         },
         {
-            "name": "Guitar",
-            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Guitar.mp3"
+            "name": "bass",
+            "path": "audio/Leão de Judá/bass.mp3"
         },
         {
-            "name": "Other",
-            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Other.mp3"
+            "name": "drums",
+            "path": "audio/Leão de Judá/drums.mp3"
         },
         {
-            "name": "Piano",
-            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Piano.mp3"
+            "name": "electric",
+            "path": "audio/Leão de Judá/electric.mp3"
         },
         {
-            "name": "Vocals",
-            "path": "audio/Obrigado Jesus Pelo Seu Sangue/Vocals.mp3"
+            "name": "keys",
+            "path": "audio/Leão de Judá/keys.mp3"
+        },
+        {
+            "name": "metronome",
+            "path": "audio/Leão de Judá/metronome.mp3"
+        },
+        {
+            "name": "other",
+            "path": "audio/Leão de Judá/other.mp3"
+        },
+        {
+            "name": "vocals",
+            "path": "audio/Leão de Judá/vocals.mp3"
         }
     ],
-    "Tu es": [
+    "Sublime": [
         {
-            "name": "Bass",
-            "path": "audio/Tu es/Bass.mp3"
+            "name": "acoustic",
+            "path": "audio/Sublime/acoustic.mp3"
         },
         {
-            "name": "Drums",
-            "path": "audio/Tu es/Drums.mp3"
+            "name": "backing_vocals",
+            "path": "audio/Sublime/backing_vocals.mp3"
         },
         {
-            "name": "Guitar",
-            "path": "audio/Tu es/Guitar.mp3"
+            "name": "bass",
+            "path": "audio/Sublime/bass.mp3"
         },
         {
-            "name": "Other",
-            "path": "audio/Tu es/Other.mp3"
+            "name": "drums",
+            "path": "audio/Sublime/drums.mp3"
         },
         {
-            "name": "Piano",
-            "path": "audio/Tu es/Piano.mp3"
+            "name": "electric",
+            "path": "audio/Sublime/electric.mp3"
         },
         {
-            "name": "Vocals",
-            "path": "audio/Tu es/Vocals.mp3"
+            "name": "keys",
+            "path": "audio/Sublime/keys.mp3"
+        },
+        {
+            "name": "metronome",
+            "path": "audio/Sublime/metronome.mp3"
+        },
+        {
+            "name": "other",
+            "path": "audio/Sublime/other.mp3"
+        },
+        {
+            "name": "vocals",
+            "path": "audio/Sublime/vocals.mp3"
         }
     ]
 }
