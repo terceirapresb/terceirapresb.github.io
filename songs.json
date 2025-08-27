@@ -1,154 +1,192 @@
 {
-    "Coração Igual ao Teu": [
+    "Canção de Simeão": [
         {
             "name": "acoustic",
-            "path": "audio/Coração Igual ao Teu/acoustic.mp3"
+            "path": "audio/Canção de Simeão/acoustic.mp3"
         },
         {
             "name": "backing_vocals",
-            "path": "audio/Coração Igual ao Teu/backing_vocals.mp3"
+            "path": "audio/Canção de Simeão/backing_vocals.mp3"
         },
         {
             "name": "bass",
-            "path": "audio/Coração Igual ao Teu/bass.mp3"
+            "path": "audio/Canção de Simeão/bass.mp3"
         },
         {
             "name": "drums",
-            "path": "audio/Coração Igual ao Teu/drums.mp3"
+            "path": "audio/Canção de Simeão/drums.mp3"
         },
         {
             "name": "electric",
-            "path": "audio/Coração Igual ao Teu/electric.mp3"
+            "path": "audio/Canção de Simeão/electric.mp3"
         },
         {
             "name": "keys",
-            "path": "audio/Coração Igual ao Teu/keys.mp3"
+            "path": "audio/Canção de Simeão/keys.mp3"
         },
         {
             "name": "metronome",
-            "path": "audio/Coração Igual ao Teu/metronome.mp3"
+            "path": "audio/Canção de Simeão/metronome.mp3"
         },
         {
             "name": "other",
-            "path": "audio/Coração Igual ao Teu/other.mp3"
+            "path": "audio/Canção de Simeão/other.mp3"
         },
         {
             "name": "vocals",
-            "path": "audio/Coração Igual ao Teu/vocals.mp3"
+            "path": "audio/Canção de Simeão/vocals.mp3"
         }
     ],
-    "Galileu": [
+    "Ele Vem": [
         {
             "name": "acoustic",
-            "path": "audio/Galileu/acoustic.mp3"
+            "path": "audio/Ele Vem/acoustic.mp3"
         },
         {
             "name": "backing_vocals",
-            "path": "audio/Galileu/backing_vocals.mp3"
+            "path": "audio/Ele Vem/backing_vocals.mp3"
         },
         {
             "name": "bass",
-            "path": "audio/Galileu/bass.mp3"
+            "path": "audio/Ele Vem/bass.mp3"
         },
         {
             "name": "drums",
-            "path": "audio/Galileu/drums.mp3"
+            "path": "audio/Ele Vem/drums.mp3"
         },
         {
             "name": "electric",
-            "path": "audio/Galileu/electric.mp3"
+            "path": "audio/Ele Vem/electric.mp3"
         },
         {
             "name": "keys",
-            "path": "audio/Galileu/keys.mp3"
+            "path": "audio/Ele Vem/keys.mp3"
         },
         {
             "name": "metronome",
-            "path": "audio/Galileu/metronome.mp3"
+            "path": "audio/Ele Vem/metronome.mp3"
         },
         {
             "name": "other",
-            "path": "audio/Galileu/other.mp3"
+            "path": "audio/Ele Vem/other.mp3"
         },
         {
             "name": "vocals",
-            "path": "audio/Galileu/vocals.mp3"
+            "path": "audio/Ele Vem/vocals.mp3"
         }
     ],
-    "Leão de Judá": [
+    "Mil Motivos": [
         {
             "name": "acoustic",
-            "path": "audio/Leão de Judá/acoustic.mp3"
+            "path": "audio/Mil Motivos/acoustic.mp3"
         },
         {
             "name": "backing_vocals",
-            "path": "audio/Leão de Judá/backing_vocals.mp3"
+            "path": "audio/Mil Motivos/backing_vocals.mp3"
         },
         {
             "name": "bass",
-            "path": "audio/Leão de Judá/bass.mp3"
+            "path": "audio/Mil Motivos/bass.mp3"
         },
         {
             "name": "drums",
-            "path": "audio/Leão de Judá/drums.mp3"
+            "path": "audio/Mil Motivos/drums.mp3"
         },
         {
             "name": "electric",
-            "path": "audio/Leão de Judá/electric.mp3"
+            "path": "audio/Mil Motivos/electric.mp3"
         },
         {
             "name": "keys",
-            "path": "audio/Leão de Judá/keys.mp3"
+            "path": "audio/Mil Motivos/keys.mp3"
         },
         {
             "name": "metronome",
-            "path": "audio/Leão de Judá/metronome.mp3"
+            "path": "audio/Mil Motivos/metronome.mp3"
         },
         {
             "name": "other",
-            "path": "audio/Leão de Judá/other.mp3"
+            "path": "audio/Mil Motivos/other.mp3"
         },
         {
             "name": "vocals",
-            "path": "audio/Leão de Judá/vocals.mp3"
+            "path": "audio/Mil Motivos/vocals.mp3"
         }
     ],
-    "Sublime": [
+    "É Ele": [
         {
             "name": "acoustic",
-            "path": "audio/Sublime/acoustic.mp3"
+            "path": "audio/É Ele/acoustic.mp3"
         },
         {
             "name": "backing_vocals",
-            "path": "audio/Sublime/backing_vocals.mp3"
+            "path": "audio/É Ele/backing_vocals.mp3"
         },
         {
             "name": "bass",
-            "path": "audio/Sublime/bass.mp3"
+            "path": "audio/É Ele/bass.mp3"
         },
         {
             "name": "drums",
-            "path": "audio/Sublime/drums.mp3"
+            "path": "audio/É Ele/drums.mp3"
         },
         {
             "name": "electric",
-            "path": "audio/Sublime/electric.mp3"
+            "path": "audio/É Ele/electric.mp3"
         },
         {
             "name": "keys",
-            "path": "audio/Sublime/keys.mp3"
+            "path": "audio/É Ele/keys.mp3"
         },
         {
             "name": "metronome",
-            "path": "audio/Sublime/metronome.mp3"
+            "path": "audio/É Ele/metronome.mp3"
         },
         {
             "name": "other",
-            "path": "audio/Sublime/other.mp3"
+            "path": "audio/É Ele/other.mp3"
         },
         {
             "name": "vocals",
-            "path": "audio/Sublime/vocals.mp3"
+            "path": "audio/É Ele/vocals.mp3"
+        }
+    ],
+    "É o Teu Povo": [
+        {
+            "name": "acoustic",
+            "path": "audio/É o Teu Povo/acoustic.mp3"
+        },
+        {
+            "name": "backing_vocals",
+            "path": "audio/É o Teu Povo/backing_vocals.mp3"
+        },
+        {
+            "name": "bass",
+            "path": "audio/É o Teu Povo/bass.mp3"
+        },
+        {
+            "name": "drums",
+            "path": "audio/É o Teu Povo/drums.mp3"
+        },
+        {
+            "name": "electric",
+            "path": "audio/É o Teu Povo/electric.mp3"
+        },
+        {
+            "name": "keys",
+            "path": "audio/É o Teu Povo/keys.mp3"
+        },
+        {
+            "name": "metronome",
+            "path": "audio/É o Teu Povo/metronome.mp3"
+        },
+        {
+            "name": "other",
+            "path": "audio/É o Teu Povo/other.mp3"
+        },
+        {
+            "name": "vocals",
+            "path": "audio/É o Teu Povo/vocals.mp3"
         }
     ]
 }
